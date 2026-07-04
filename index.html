@@ -1,1 +1,1125 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StayNest — PG & Rental Listings</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ink: #1a1a2e;
+    --clay: #e8572a;
+    --sand: #f7f3ee;
+    --mist: #eae6e0;
+    --leaf: #3a966d;
+    --leaf-light: #e8f5f0;
+    --white: #ffffff;
+    --text-muted: #6b7280;
+    --border: #ddd8d0;
+    --shadow: 0 2px 12px rgba(26,26,46,0.08);
+    --shadow-lg: 0 8px 32px rgba(26,26,46,0.13);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--sand);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--ink);
+    padding: 0 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    color: var(--white);
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--clay); }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .btn-nav {
+    background: var(--clay);
+    color: var(--white) !important;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 600 !important;
+  }
+  .btn-nav:hover { background: #d44a1f; }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--ink);
+    padding: 80px 5% 64px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    right: -80px; top: -80px;
+    width: 420px; height: 420px;
+    background: radial-gradient(circle, rgba(232,87,42,0.18) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .hero-text h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .hero-text h1 em {
+    font-style: italic;
+    color: var(--clay);
+  }
+  .hero-text p {
+    color: rgb(241, 234, 234);
+    font-size: 1.05rem;
+    margin-bottom: 32px;
+    max-width: 420px;
+  }
+  .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--clay);
+    color: var(--white);
+    padding: 12px 28px;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: #d44a1f; transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent;
+    color: rgba(255,255,255,0.8);
+    padding: 12px 28px;
+    border-radius: 8px;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+    display: inline-block;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.5); color: var(--white); }
+
+  /* Hero stats */
+  .hero-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .stat-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .stat-icon {
+    width: 44px; height: 44px;
+    background: rgba(232,87,42,0.2);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .stat-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem;
+    color: var(--white);
+    line-height: 1;
+  }
+  .stat-card p { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 2px; }
+
+  /* ── SEARCH BAR ── */
+  .search-section {
+    background: var(--white);
+    padding: 28px 5%;
+    box-shadow: 0 2px 8px rgba(26,26,46,0.06);
+  }
+  .search-bar {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .search-bar input, .search-bar select {
+    flex: 1;
+    min-width: 160px;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    background: var(--sand);
+    color: var(--ink);
+    transition: border-color 0.2s;
+  }
+  .search-bar input:focus, .search-bar select:focus {
+    outline: none;
+    border-color: var(--clay);
+  }
+  .search-bar button {
+    background: var(--clay);
+    color: var(--white);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  /* ── SECTIONS ── */
+  .section { padding: 64px 5%; }
+  .section-header {
+    max-width: 1100px;
+    margin: 0 auto 40px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .section-header h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.9rem;
+    color: var(--ink);
+  }
+  .section-header a {
+    color: var(--clay);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+  .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--clay);
+    margin-bottom: 6px;
+  }
+
+  /* ── PG CARDS ── */
+  .cards-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .pg-card {
+    background: var(--white);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.25s, transform 0.2s;
+    cursor: pointer;
+  }
+  .pg-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+  .card-img {
+    height: 190px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s;
+  }
+  .pg-card:hover .card-img img { transform: scale(1.04); }
+  .badge {
+    position: absolute;
+    top: 12px; left: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .badge-available { background: var(--leaf); color: #fff; }
+  .badge-limited { background: #f59e0b; color: #fff; }
+  .badge-full { background: #ef4444; color: #fff; }
+  .badge-girls { background: #ec4899; color: #fff; }
+  .badge-boys { background: #3b82f6; color: #fff; }
+  .wishlist-btn {
+    position: absolute;
+    top: 12px; right: 12px;
+    width: 32px; height: 32px;
+    background: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s;
+  }
+  .wishlist-btn:hover { transform: scale(1.1); }
+  .card-body { padding: 16px 20px 20px; }
+  .card-body h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+    color: var(--ink);
+  }
+  .card-location {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    display: flex; align-items: center; gap: 4px;
+    margin-bottom: 10px;
+  }
+  .card-amenities {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-bottom: 14px;
+  }
+  .amenity-tag {
+    background: var(--mist);
+    color: var(--text-muted);
+    font-size: 0.73rem;
+    padding: 3px 9px;
+    border-radius: 20px;
+  }
+  .card-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .price { font-family: 'Fraunces', serif; font-size: 1.25rem; color: var(--ink); }
+  .price span { font-family: 'Inter', sans-serif; font-size: 0.78rem; color: var(--text-muted); font-weight: 400; }
+  .btn-contact {
+    background: var(--ink);
+    color: var(--white);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-contact:hover { background: var(--clay); }
+
+  /* ── HOW IT WORKS ── */
+  .how-section {
+    background: var(--ink);
+    padding: 64px 5%;
+  }
+  .how-section h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.9rem;
+    color: var(--white);
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .how-section h2 em { color: var(--clay); font-style: italic; }
+  .steps-grid {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 32px;
+  }
+  .step {
+    text-align: center;
+  }
+  .step-num {
+    width: 48px; height: 48px;
+    background: var(--clay);
+    color: white;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    margin: 0 auto 16px;
+  }
+  .step h3 { color: var(--white); font-size: 1rem; margin-bottom: 8px; }
+  .step p { color: rgba(255,255,255,0.5); font-size: 0.85rem; }
+
+  /* ── LIST YOUR PG FORM ── */
+  .list-section {
+    background: var(--white);
+    padding: 64px 5%;
+  }
+  .form-wrapper {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .form-wrapper h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 2rem;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+  .form-wrapper > p {
+    color: var(--text-muted);
+    margin-bottom: 36px;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: 0.3px;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: var(--ink);
+    background: var(--sand);
+    transition: border-color 0.2s;
+    resize: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--clay);
+  }
+  .amenities-check {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .check-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .check-item input[type="checkbox"] { accent-color: var(--clay); }
+  .upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 28px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .upload-area:hover { border-color: var(--clay); background: #fff5f2; }
+  .upload-area p { color: var(--text-muted); font-size: 0.85rem; margin-top: 8px; }
+  .upload-area span { font-size: 2rem; }
+  .submit-row {
+    margin-top: 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .submit-row button {
+    background: var(--clay);
+    color: white;
+    border: none;
+    padding: 14px 36px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .submit-row button:hover { background: #d44a1f; transform: translateY(-1px); }
+  .submit-row small { color: var(--text-muted); font-size: 0.78rem; }
+
+  /* ── TESTIMONIALS ── */
+  .testi-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .testi-card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 28px;
+    border-left: 4px solid var(--clay);
+  }
+  .testi-card p {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    line-height: 1.7;
+  }
+  .testi-author { display: flex; align-items: center; gap: 12px; }
+  .avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--clay);
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+  .testi-author h4 { font-size: 0.9rem; font-weight: 600; }
+  .testi-author span { font-size: 0.78rem; color: var(--text-muted); }
+
+  /* ── CONTACT ── */
+  .contact-section {
+    background: var(--leaf-light);
+    padding: 64px 5%;
+    text-align: center;
+  }
+  .contact-section h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 2rem;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .contact-section p { color: var(--text-muted); margin-bottom: 28px; }
+  .contact-cards {
+    max-width: 700px;
+    margin: 0 auto 32px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .contact-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 24px 16px;
+    text-align: center;
+  }
+  .contact-card .icon { font-size: 1.8rem; margin-bottom: 10px; }
+  .contact-card h4 { font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; }
+  .contact-card a { color: var(--clay); font-size: 0.82rem; text-decoration: none; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.5);
+    padding: 40px 5%;
+    text-align: center;
+    font-size: 0.83rem;
+  }
+  footer a { color: rgba(255,255,255,0.6); text-decoration: none; margin: 0 12px; }
+  footer a:hover { color: var(--clay); }
+  .footer-logo {
+    font-family: 'Fraunces', serif;
+    font-size: 1.3rem;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+  .footer-logo span { color: var(--clay); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(26,26,46,0.65);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 36px;
+    max-width: 480px;
+    width: 100%;
+    position: relative;
+    animation: modalIn 0.25s ease;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: none; border: none; font-size: 1.3rem;
+    cursor: pointer; color: var(--text-muted);
+    line-height: 1;
+  }
+  .modal h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+  }
+  .modal > p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px; }
+  .modal-form { display: flex; flex-direction: column; gap: 14px; }
+  .modal-form input, .modal-form textarea {
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    background: var(--sand);
+  }
+  .modal-form input:focus, .modal-form textarea:focus {
+    outline: none; border-color: var(--clay);
+  }
+  .modal-form button {
+    background: var(--clay);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.95rem;
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--ink);
+    color: white;
+    padding: 14px 22px;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    z-index: 9999;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.35s cubic-bezier(.34,1.56,.64,1);
+    box-shadow: var(--shadow-lg);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+    .hero-stats { flex-direction: row; flex-wrap: wrap; }
+    .stat-card { flex: 1; min-width: 200px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .amenities-check { grid-template-columns: repeat(2,1fr); }
+    .contact-cards { grid-template-columns: 1fr; }
+    .nav-links .hide-mobile { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="logo">Stay<span>Nest</span></div>
+  <div class="nav-links">
+    <a href="#listings" class="hide-mobile">Browse PG's</a>
+    <a href="#list" class="hide-mobile">List Your PG</a>
+    <a href="#contact" class="hide-mobile">Contact</a>
+    <a href="#list" class="btn-nav">+ Add Listing</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="eyebrow">For landlords &amp; tenants</div>
+      <h1>Find the right<br><em>paying guest</em><br>in your city</h1>
+      <p>List your PG in minutes. Get verified tenants directly. No broker, no hidden charges.</p>
+      <div class="hero-btns">
+        <a href="#list" class="btn-primary">List Your PG Free</a>
+        <a href="#listings" class="btn-ghost">Browse Rooms</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-icon">🏠</div>
+        <div>
+          <h3>200+</h3>
+          <p>Active PG listings across Jaipur</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div>
+          <h3>98%</h3>
+          <p>Landlords find a tenant within 2 weeks</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💸</div>
+        <div>
+          <h3>Zero</h3>
+          <p>Brokerage — connect directly</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SEARCH ── -->
+<div class="search-section">
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="🔍  City, locality, or landmark" />
+    <select id="filterType">
+      <option value="">Room Type</option>
+      <option>Single Occupancy</option>
+      <option>Double Sharing</option>
+      <option>Triple Sharing</option>
+      <option>Entire Flat</option>
+    </select>
+    <select id="filterGender">
+      <option value="">For Whom</option>
+      <option>Boys</option>
+      <option>Girls</option>
+      <option>Co-ed</option>
+    </select>
+    <select id="filterBudget">
+      <option value="">Budget</option>
+      <option value="5000">Under ₹5,000</option>
+      <option value="8000">Under ₹8,000</option>
+      <option value="12000">Under ₹12,000</option>
+      <option value="20000">Under ₹20,000</option>
+    </select>
+    <button onclick="filterListings()">Search</button>
+  </div>
+</div>
+
+<!-- ── LISTINGS ── -->
+<section class="section" id="listings" style="background:var(--sand);">
+  <div class="section-header">
+    <div>
+      <div class="eyebrow">Available Now</div>
+      <h2>Featured PG Rooms</h2>
+    </div>
+    <a href="#" onclick="resetFilter();return false;">View All</a>
+  </div>
+  <div class="cards-grid" id="cardsGrid">
+    <!-- injected by JS -->
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="how-section" id="how">
+  <h2>List your PG in <em>4 simple steps</em></h2>
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Create Profile</h3>
+      <p>Sign up as a landlord with your phone number — takes 30 seconds.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Add Your PG</h3>
+      <p>Fill in room details, amenities, photos, and rent. Go live instantly.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Get Enquiries</h3>
+      <p>Interested tenants contact you directly — WhatsApp or call.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h3>Rent It Out</h3>
+      <p>Finalize the deal on your terms. Mark as occupied in one click.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── LIST YOUR PG FORM ── -->
+<section class="list-section" id="list">
+  <div class="form-wrapper">
+    <div class="eyebrow">Landlord Panel</div>
+    <h2>List Your PG</h2>
+    <p>Free listing. Takes under 5 minutes. No login required to start.</p>
+
+    <form id="pgForm" onsubmit="submitListing(event)">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>PG / Property Name</label>
+          <input type="text" placeholder="e.g. Sunrise Men's PG" required />
+        </div>
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" placeholder="Landlord name" required />
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" placeholder="+91 XXXXX XXXXX" required />
+        </div>
+        <div class="form-group">
+          <label>WhatsApp Number</label>
+          <input type="tel" placeholder="Same or different" />
+        </div>
+        <div class="form-group full">
+          <label>Full Address</label>
+          <input type="text" placeholder="House no., Street, Area, City, PIN" required />
+        </div>
+        <div class="form-group">
+          <label>City</label>
+          <input type="text" placeholder="e.g. Jodhpur" required />
+        </div>
+        <div class="form-group">
+          <label>Nearby Landmark</label>
+          <input type="text" placeholder="e.g. Near MBM College" />
+        </div>
+        <div class="form-group">
+          <label>Room Type</label>
+          <select required>
+            <option value="">Select type</option>
+            <option>Single Occupancy</option>
+            <option>Double Sharing</option>
+            <option>Triple Sharing</option>
+            <option>Entire Flat</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>PG For</label>
+          <select required>
+            <option value="">Select</option>
+            <option>Boys</option>
+            <option>Girls</option>
+            <option>Co-ed</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Monthly Rent (₹)</label>
+          <input type="number" placeholder="e.g. 6500" required min="500" />
+        </div>
+        <div class="form-group">
+          <label>Security Deposit (₹)</label>
+          <input type="number" placeholder="e.g. 13000" />
+        </div>
+        <div class="form-group">
+          <label>Available From</label>
+          <input type="date" required />
+        </div>
+        <div class="form-group">
+          <label>Rooms Available</label>
+          <input type="number" placeholder="No. of vacancies" min="1" />
+        </div>
+        <div class="form-group full">
+          <label>Amenities Included</label>
+          <div class="amenities-check">
+            <label class="check-item"><input type="checkbox" /> Wi-Fi</label>
+            <label class="check-item"><input type="checkbox" /> AC</label>
+            <label class="check-item"><input type="checkbox" /> Geyser</label>
+            <label class="check-item"><input type="checkbox" /> Meals (2)</label>
+            <label class="check-item"><input type="checkbox" /> Meals (3)</label>
+            <label class="check-item"><input type="checkbox" /> Laundry</label>
+            <label class="check-item"><input type="checkbox" /> TV</label>
+            <label class="check-item"><input type="checkbox" /> Parking</label>
+            <label class="check-item"><input type="checkbox" /> CCTV</label>
+            <label class="check-item"><input type="checkbox" /> Power Backup</label>
+            <label class="check-item"><input type="checkbox" /> Housekeeping</label>
+            <label class="check-item"><input type="checkbox" /> Drinking Water</label>
+          </div>
+        </div>
+        <div class="form-group full">
+          <label>Description / House Rules</label>
+          <textarea rows="4" placeholder="Describe your PG, timings, restrictions, nearby facilities..."></textarea>
+        </div>
+        <div class="form-group full">
+          <label>Upload Photos</label>
+          <div class="upload-area" onclick="triggerUpload()">
+            <span>📷</span>
+            <p>Click to upload room photos (JPG, PNG — max 5 images)</p>
+            <input type="file" id="photoUpload" multiple accept="image/*" style="display:none" />
+          </div>
+        </div>
+      </div>
+      <div class="submit-row">
+        <button type="submit">Publish Listing →</button>
+        <small>By submitting, you agree to our Terms of Service. Listing goes live instantly.</small>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+<section class="section" style="background:var(--sand);">
+  <div class="section-header" style="justify-content:center; text-align:center; display:block; margin-bottom:40px;">
+    <div class="eyebrow" style="text-align:center;">What landlords say</div>
+    <h2 style="font-family:'Fraunces',serif; font-size:1.9rem;">Trusted by property owners</h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <p>"Listed my PG on a Sunday evening and had 3 serious enquiries by Monday morning. The platform is clean and very easy to use."</p>
+      <div class="testi-author">
+        <div class="avatar">RK</div>
+        <div><h4>Ramesh Kumar</h4><span>Landlord, Pune</span></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <p>"No broker involved. I speak directly with tenants, verify them myself, and decide. That level of control is rare on other platforms."</p>
+      <div class="testi-author">
+        <div class="avatar">SP</div>
+        <div><h4>Sunita Patil</h4><span>Landlord, Bangalore</span></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <p>"My PG has 12 rooms and I manage all vacancies through StayNest. The search filters bring exactly the right kind of tenants."</p>
+      <div class="testi-author">
+        <div class="avatar">AJ</div>
+        <div><h4>Arjun Joshi</h4><span>Landlord, Jodhpur</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section class="contact-section" id="contact">
+  <div class="eyebrow">Get in touch</div>
+  <h2>We're here to help you</h2>
+  <p>Questions about listing your property or finding a room? Reach out anytime.</p>
+  <div class="contact-cards">
+    <div class="contact-card">
+      <div class="icon">📞</div>
+      <h4>Call Us</h4>
+      <a href="tel:+919876543210">+91 98765 43210</a>
+    </div>
+    <div class="contact-card">
+      <div class="icon">✉️</div>
+      <h4>Email</h4>
+      <a href="mailto:hello@staynest.in">hello@staynest.in</a>
+    </div>
+    <div class="contact-card">
+      <div class="icon">💬</div>
+      <h4>WhatsApp</h4>
+      <a href="https://wa.me/919876543210" target="_blank">Chat Now</a>
+    </div>
+  </div>
+  <a href="#list" class="btn-primary">List Your PG Now — It's Free</a>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-logo">Stay<span>Nest</span></div>
+  <div style="margin-bottom:16px;">
+    <a href="#">About</a>
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms</a>
+    <a href="#contact">Contact</a>
+    <a href="#list">List PG</a>
+  </div>
+  <p>©2025 StayNest. All rights reserved. Connecting landlords with tenants across India.</p>
+</footer>
+
+<!-- ── CONTACT MODAL ── -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModalBtn()">✕</button>
+    <h3 id="modalTitle">Contact Landlord</h3>
+    <p id="modalSubtitle">Send an enquiry directly — the landlord will contact you shortly.</p>
+    <div class="modal-form">
+      <input type="text" placeholder="Your Name" required />
+      <input type="tel" placeholder="Your Phone Number" required />
+      <input type="text" placeholder="Move-in Date (e.g. 1 July 2025)" />
+      <textarea rows="3" placeholder="Any message or special requirements?"></textarea>
+      <button onclick="sendEnquiry()">Send Enquiry</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast">✅ <span id="toastMsg">Done!</span></div>
+
+<script>
+// ── DATA ──
+const listings = [
+  {
+    id:1, name:"Pradhan PG", location:"Sitapura, Jaipur",
+    price:7000, type:"Double Sharing", gender:"Boys",
+    amenities:["Wi-Fi","Meals","AC","Geyser"],
+    status:"available", statusLabel:"Available",
+    img:"https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=500&q=80"
+  },
+  {
+    id:2, name:"Sunshine Girls Hostel", location:"Paota, Jodhpur",
+    price:7200, type:"Single Occupancy", gender:"Girls",
+    amenities:["Wi-Fi","AC","Laundry","CCTV"],
+    status:"available", statusLabel:"Available",
+    img:"https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=500&q=80"
+  },
+  {
+    id:3, name:"Urban Nest PG", location:"Chopasni Housing Board",
+    price:5500, type:"Triple Sharing", gender:"Boys",
+    amenities:["Wi-Fi","TV","Parking","Meals"],
+    status:"limited", statusLabel:"2 Seats Left",
+    img:"https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=500&q=80"
+  },
+  {
+    id:4, name:"Lakshmi Bhawan PG", location:"Shastri Nagar, Jodhpur",
+    price:4800, type:"Double Sharing", gender:"Co-ed",
+    amenities:["Wi-Fi","Geyser","Power Backup"],
+    status:"available", statusLabel:"Available",
+    img:"https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=500&q=80"
+  },
+  {
+    id:5, name:"Elite Stay Hostel", location:"Ratanada, Jodhpur",
+    price:9500, type:"Single Occupancy", gender:"Girls",
+    amenities:["Wi-Fi","AC","Meals","CCTV","Laundry"],
+    status:"available", statusLabel:"Available",
+    img:"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500&q=80"
+  },
+  {
+    id:6, name:"Rajputana Residency", location:"Mandore Road, Jodhpur",
+    price:5000, type:"Triple Sharing", gender:"Boys",
+    amenities:["Wi-Fi","TV","Parking"],
+    status:"full", statusLabel:"Full",
+    img:"https://images.unsplash.com/photo-1513694203232-719a280e022f?w=500&q=80"
+  },
+];
+
+const genderBadge = { "Boys":"badge-boys", "Girls":"badge-girls", "Co-ed":"badge-available" };
+
+function renderCards(data) {
+  const grid = document.getElementById('cardsGrid');
+  if (!data.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:48px 0;">No PGs found matching your filters. <a href="#" style="color:var(--clay);" onclick="resetFilter();return false;">Clear filters</a></div>`;
+    return;
+  }
+  grid.innerHTML = data.map(pg => `
+    <div class="pg-card">
+      <div class="card-img">
+        <img src="${pg.img}" alt="${pg.name}" loading="lazy" />
+        <span class="badge badge-${pg.status}">${pg.statusLabel}</span>
+        <span class="badge ${genderBadge[pg.gender]}" style="top:44px;">${pg.gender}</span>
+        <button class="wishlist-btn" onclick="toggleWish(this)" title="Save">🤍</button>
+      </div>
+      <div class="card-body">
+        <h3>${pg.name}</h3>
+        <div class="card-location">📍 ${pg.location}</div>
+        <div class="card-amenities">
+          ${pg.amenities.map(a=>`<span class="amenity-tag">${a}</span>`).join('')}
+        </div>
+        <div class="card-footer">
+          <div class="price">₹${pg.price.toLocaleString('en-IN')}<span>/month</span></div>
+          <button class="btn-contact" onclick="openModal('${pg.name}', '${pg.location}')">Enquire</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+renderCards(listings);
+
+function filterListings() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const type = document.getElementById('filterType').value;
+  const gender = document.getElementById('filterGender').value;
+  const budget = parseInt(document.getElementById('filterBudget').value) || Infinity;
+
+  const filtered = listings.filter(pg => {
+    const matchQ = !q || pg.name.toLowerCase().includes(q) || pg.location.toLowerCase().includes(q);
+    const matchT = !type || pg.type === type;
+    const matchG = !gender || pg.gender === gender;
+    const matchB = pg.price <= budget;
+    return matchQ && matchT && matchG && matchB;
+  });
+
+  renderCards(filtered);
+  document.getElementById('listings').scrollIntoView({ behavior:'smooth' });
+}
+
+function resetFilter() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('filterType').value = '';
+  document.getElementById('filterGender').value = '';
+  document.getElementById('filterBudget').value = '';
+  renderCards(listings);
+}
+
+// ── MODAL ──
+function openModal(name, location) {
+  document.getElementById('modalTitle').textContent = 'Enquire: ' + name;
+  document.getElementById('modalSubtitle').textContent = '📍 ' + location + ' — Send your request directly.';
+  document.getElementById('modalOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeModalBtn() {
+  document.getElementById('modalOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModalBtn();
+}
+function sendEnquiry() {
+  closeModalBtn();
+  showToast('Enquiry sent! The landlord will contact you soon.');
+}
+
+// ── FORM SUBMIT ──
+function submitListing(e) {
+  e.preventDefault();
+  showToast('🎉 Your PG is now live! Tenants can find it right away.');
+  e.target.reset();
+}
+
+// ── WISHLIST ──
+function toggleWish(btn) {
+  btn.textContent = btn.textContent === '🤍' ? '❤️' : '🤍';
+  if (btn.textContent === '❤️') showToast('Added to your saved list!');
+}
+
+// ── UPLOAD ──
+function triggerUpload() {
+  document.getElementById('photoUpload').click();
+}
+document.getElementById('photoUpload').onchange = function() {
+  if (this.files.length) {
+    document.querySelector('.upload-area p').textContent = `${this.files.length} photo(s) selected ✓`;
+  }
+};
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── SMOOTH SCROLL for anchors ──
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior:'smooth' }); }
+  });
+});
+</script>
+</body>
+</html>
