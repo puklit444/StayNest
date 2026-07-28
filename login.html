@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - StayNest</title>
+  <style>
+    /* Styling to match your StayNest theme */
+    body { font-family: 'Inter', sans-serif; background: #f7f3ee; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+    .auth-container { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); width: 100%; max-width: 400px; border: 2px solid #ffe4d6; }
+    h2 { text-align: center; color: #1a1a2e; }
+    
+    /* Toggle Tabs */
+    .tabs { display: flex; margin-bottom: 20px; cursor: pointer; }
+    .tab { flex: 1; text-align: center; padding: 10px; border-bottom: 2px solid #eee; font-weight: bold; color: #6b7280; transition: 0.2s; }
+    .tab.active { border-bottom: 2px solid #e8572a; color: #e8572a; }
+    
+    /* Form Elements */
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-size: 0.9rem; font-weight: bold; color: #1a1a2e; }
+    input, select { width: 100%; padding: 10px; border: 2px solid #eee; border-radius: 6px; box-sizing: border-box; font-size: 1rem; outline: none; transition: 0.2s; }
+    input:focus, select:focus { border-color: #e8572a; }
+    button { width: 100%; padding: 15px; background: #e8572a; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+    button:hover { background: #d64a1f; }
+    
+    .hidden { display: none; }
+    .back-link { display: block; text-align: center; margin-top: 20px; text-decoration: none; color: #6b7280; font-size: 0.9rem; }
+    .back-link:hover { color: #e8572a; }
+  </style>
+</head>
+<body>
+
+  <div class="auth-container">
+    <h2>Welcome to StayNest</h2>
+    
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('login')" id="tab-login">Log In</div>
+      <div class="tab" onclick="switchTab('signup')" id="tab-signup">Sign Up</div>
+    </div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="you@example.com" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" required>
+      </div>
+      <button type="submit">Log In</button>
+    </form>
+
+    <form id="signupForm" class="hidden">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="signupName" placeholder="John Doe" required>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="signupEmail" placeholder="you@example.com" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="signupPassword" placeholder="Create a password" required>
+      </div>
+      <div class="form-group">
+        <label>I am a...</label>
+        <select id="signupRole">
+          <option value="tenant">Tenant (Looking for a room)</option>
+          <option value="landlord">Landlord (Listing a room)</option>
+        </select>
+      </div>
+      <button type="submit">Create Account</button>
+    </form>
+
+    <a href="index.html" class="back-link">← Back to Home</a>
+  </div>
+
+<script>
+    // --- 1. TOGGLE TABS ---
+    function switchTab(tab) {
+      document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
+      document.getElementById('signupForm').classList.toggle('hidden', tab !== 'signup');
+      
+      document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+      document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+    }
+
+    // --- 2. CONNECT SIGNUP TO BACKEND ---
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+      e.preventDefault(); 
+      
+      const name = document.getElementById('signupName').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      const role = document.getElementById('signupRole').value;
+
+      try {
+        const response = await fetch('http://localhost:5000/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password, role })
+        });
+
+        const data = await response.json();
+        alert(data.message);
+
+        if (response.ok) {
+          switchTab('login'); // Automatically switch to login screen
+        }
+      } catch (error) {
+        console.error("Signup failed:", error);
+        alert("Something went wrong on the server!");
+      }
+    });
+
+    // --- 3. CONNECT LOGIN TO BACKEND ---
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        const response = await fetch('http://localhost:5000/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+        
+        if (response.ok) {
+          alert(`Welcome back, ${data.user.name}!`);
+          // Save the ID card (token) to the browser so the user stays logged in
+          localStorage.setItem('staynestToken', data.token);
+          localStorage.setItem('staynestUser', JSON.stringify(data.user));
+          
+          // Send them to the homepage!
+          window.location.href = 'index.html'; 
+        } else {
+          alert(data.message); // Will say "Invalid email or password"
+        }
+      } catch (error) {
+        console.error("Login failed:", error);
+        alert("Something went wrong on the server!");
+      }
+    });
+  </script>
+</body>
+</html>

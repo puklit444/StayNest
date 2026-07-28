@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StayNest - Premium Property Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#767470",
+                        "surface-container": "#efeded",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#e6e2dd",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#eae8e7",
+                        "surface-tint": "#b02f00",
+                        "primary-fixed": "#ffdbd1",
+                        "on-primary-fixed": "#3b0a00",
+                        "on-primary-fixed-variant": "#862200",
+                        "tertiary": "#5d5c58",
+                        "surface-container-highest": "#e4e2e2",
+                        "inverse-primary": "#ffb59f",
+                        "on-tertiary-container": "#fffbff",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#484743",
+                        "secondary-fixed-dim": "#c6c4df",
+                        "on-tertiary-fixed": "#1c1c19",
+                        "outline": "#8e7068",
+                        "tertiary-fixed-dim": "#c9c6c1",
+                        "on-secondary-container": "#63627a",
+                        "surface": "#fbf9f8",
+                        "inverse-on-surface": "#f2f0f0",
+                        "on-secondary-fixed-variant": "#45455b",
+                        "on-surface-variant": "#5a413a",
+                        "primary-fixed-dim": "#ffb59f",
+                        "surface-variant": "#e4e2e2",
+                        "surface-bright": "#fbf9f8",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f5f3f3",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#dbd9d9",
+                        "secondary": "#5d5c74",
+                        "background": "#fbf9f8",
+                        "primary-container": "#cf4519",
+                        "outline-variant": "#e2bfb5",
+                        "secondary-fixed": "#e2e0fc",
+                        "on-background": "#1b1c1c",
+                        "secondary-container": "#e2e0fc",
+                        "on-secondary-fixed": "#1a1a2e",
+                        "primary": "#ab2e00",
+                        "on-surface": "#1b1c1c",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#303030",
+                        "on-primary-container": "#fffbff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1280px",
+                        "section-gap": "80px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "40px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "display-lg-mobile": ["36px", { "lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #f7f3ee; }
+        .ambient-shadow { box-shadow: 0px 4px 20px rgba(26, 26, 46, 0.05); }
+        .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .hover-lift:hover { transform: translateY(-2px); box-shadow: 0px 8px 24px rgba(26, 26, 46, 0.08); }
+        .glass-panel { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="font-body-md text-on-surface min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface shadow-sm sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-margin-desktop py-4 max-w-container-max mx-auto">
+<div class="flex items-center gap-2 cursor-pointer">
+<span class="text-headline-md font-headline-md font-extrabold text-on-surface dark:text-on-surface">Stay<span class="text-primary">Nest</span></span>
+</div>
+<!-- Desktop Nav Links -->
+<nav class="hidden md:flex items-center gap-gutter">
+<a class="text-primary dark:text-primary-fixed-dim border-b-2 border-primary pb-1 text-label-md font-label-md opacity-80 transition-all duration-200" href="#">Browse PG's</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors text-label-md font-label-md" href="#">Contact</a>
+</nav>
+<div class="hidden md:flex items-center gap-gutter">
+<span class="text-on-surface-variant dark:text-on-surface-variant text-label-md font-label-md">Welcome, User!</span>
+<button class="text-primary dark:text-primary-fixed-dim text-label-md font-label-md hover:text-primary-container transition-colors">Logout</button>
+</div>
+<!-- Mobile Menu Button -->
+<button class="md:hidden text-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8">
+<!-- Hero Photo Grid -->
+<section class="relative w-full mb-section-gap rounded-xl overflow-hidden shadow-sm h-[400px] md:h-[500px] flex gap-2">
+<!-- Left Large Image -->
+<div class="w-full md:w-1/2 h-full rounded-l-xl overflow-hidden cursor-pointer group">
+<img alt="Main property view" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A spacious, modern co-living bedroom with bright, airy light. High-end minimalist design with a large bed, clean white linens, wooden flooring, and a sleek study desk. Natural sunlight pours in through large windows. Warm off-white walls with subtle indoor plants. Modern corporate aesthetic with hospitality warmth." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEFByI9Hl7t5MEg3LBTWR5Nt72CHuMwliWdFJ2FOQx8XRNggYnt7N0-RdvtXT88mEsi4-A8Hz-VgCdKhjxHYqBjK2292UV51sczMoNR3fj_mHAXVnqxE2HciYh4fPtwuhFUAZoZBSjgW7tE5fAvDScfHbjE-Pz1l4BmhFVCESi2iPTQmw8fkpy5jA09_iMtZLUNbF9aNnzXBg1I_baSZwxpAfK_pULRbf78DHh_L-_JFuPACHe1I82cA"/>
+</div>
+<!-- Right 2x2 Grid (Desktop Only) -->
+<div class="hidden md:flex w-1/2 h-full flex-col gap-2">
+<div class="flex h-1/2 gap-2">
+<div class="w-1/2 h-full overflow-hidden cursor-pointer group">
+<img alt="Kitchen view" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A modern, clean shared kitchen area in a premium co-living space. Features sleek white cabinetry, stainless steel appliances, and a marble countertop. Bright overhead lighting and a warm, inviting atmosphere. Minimalist and orderly." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3sCGvv53Nl03db8DboNt_zInk3eAqVKdP3afmwEbtmIg7UyNZJvEbIBLEMTMFULbBg2RsaSvrVnJ7rEVsjY4aXZ98te3WvzF-xA2otCjZA98hTlNWDH33eNhS3nOisraRwRLR3ofDy01tuSfzXh3uLWTUeHD8ddSO1GxSe9nBdUf5ic7YRR_nXSCXaxVQ1sWx7XUM6Ddi7rEWHdFFpUJugMh40K7U24ARws53P1tTRxUa9FC3zew5Bg"/>
+</div>
+<div class="w-1/2 h-full rounded-tr-xl overflow-hidden cursor-pointer group">
+<img alt="Lounge view" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A stylish communal lounge area with comfortable modern seating, a neutral color palette of creams and greys, and warm ambient lighting. A flat-screen TV on a wooden console. Sophisticated hospitality style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQVj4HqKqlwpCJ7kzcAR4tkNF7wTvB-23ltKjDPq4AWEOTYuKigq5RlidaMaqUKhJ8b_RdSdNaQDomgbcgKEVC7FO3AY5R4g-BYxdTwS-AxOV8w7XO5yHTK1B21k5tBFdDGrKWidyGxocwtKG-D4iMKU-ApECCbwNjwJ2iyeFNK7Ckr--P7iVBiRUnQffhIT3GG3v9KQNqd0Mn0PyTq5MVUx_bP4sS6h_0QMS9sRLvJ7kdG-7jqfMy6g"/>
+</div>
+</div>
+<div class="flex h-1/2 gap-2">
+<div class="w-1/2 h-full overflow-hidden cursor-pointer group">
+<img alt="Bathroom view" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A pristine, modern bathroom with a glass shower enclosure, beige tiles, and sleek chrome fixtures. Well-lit and clean, reflecting a high-end residential feel. Warm neutral tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs3VJDjH1tavsLa72nd0mt-GDFpcgQ7mGcfXlCY_mjzJ_ymVJ7BGIWhLAVs-8CZr4U5H6aYuURikiZmSwFL9xJmlXbpMjJ1eqgTSkRTtaBAL8PeH8QojGTHndZKvcK4mIamud_5mCilRFnRF4gqWZA4gTfeDOK6iFla7R2xi-CH7TTOrOh80SbyWLLHmJhgVGGqM_ijVdGJ9wwUFwEHKdAOIembcsylnkBCsxjzCH1Zwaq2-SfgfgqjQ"/>
+</div>
+<div class="w-1/2 h-full rounded-br-xl overflow-hidden relative cursor-pointer group">
+<img alt="Study area view" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A beautifully designed study corner within a bedroom. Features a minimalist wooden desk, an ergonomic chair, and a small potted plant. Bathed in soft, natural light creating a productive yet calming environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtmrZpIfj5oszHMiR8m1lgikf2dL1JfUIPKyXbGbEg4q1LqTLEkhM0Xn0bRk0YordTiA5Rlu3ShDDqRuzbsa3O3lpOhTuZV22Y12dL9CcOWyISw7Oz99kpLOzLPeuSpl1WuEBj79elFtG4GM6Sm9y_YXavsriW0oZhDB6RBD978A7yFIvGVxcQs4FDe4ZauPNk48OKAw3Q5EUXxy9G8QuLOoxoWMZp3MbHKK7h05cLs60BM9CJo9uzUw"/>
+<!-- View All Photos Button -->
+<button class="absolute bottom-4 right-4 bg-surface-container-lowest text-on-surface px-4 py-2 rounded-lg shadow-sm hover:bg-surface-container transition-colors flex items-center gap-2 text-label-md font-label-md border border-outline-variant">
+<span class="material-symbols-outlined text-sm">grid_view</span>
+                            View All Photos
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Content Section -->
+<section class="flex flex-col lg:flex-row gap-gutter relative">
+<!-- Left Column (Details) -->
+<div class="w-full lg:w-[70%] flex flex-col gap-8">
+<!-- Title & Tags -->
+<div class="flex flex-col gap-4 border-b border-surface-dim pb-8">
+<h1 class="text-headline-lg md:text-display-lg-mobile font-headline-lg md:font-display-lg-mobile text-on-surface">Premium Co-ed PG in Koregaon Park, Pune</h1>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary">location_on</span>
+<span class="text-body-lg font-body-lg">Koregaon Park, Pune, Maharashtra</span>
+</div>
+<div class="flex flex-wrap gap-2 mt-2">
+<span class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full text-label-sm font-label-sm">Co-ed</span>
+<span class="bg-surface-container-high text-on-surface px-3 py-1 rounded-full text-label-sm font-label-sm border border-surface-dim">Single Occupancy</span>
+<span class="bg-surface-container-high text-on-surface px-3 py-1 rounded-full text-label-sm font-label-sm border border-surface-dim">Double Occupancy</span>
+</div>
+</div>
+<!-- About -->
+<div class="flex flex-col gap-4 border-b border-surface-dim pb-8">
+<h2 class="text-headline-md font-headline-md text-on-surface">About this property</h2>
+<p class="text-body-md font-body-md text-on-surface-variant leading-relaxed">
+                        Experience sophisticated co-living in the heart of Koregaon Park. This premium property is designed for young professionals and students seeking a balance of privacy and community. Featuring modern furnishings, high-end appliances, and meticulously maintained common areas, this space offers a hotel-like experience with the warmth of a home. Enjoy secure access, dedicated workspace options, and a tranquil environment conducive to both work and relaxation.
+                    </p>
+</div>
+<!-- Amenities -->
+<div class="flex flex-col gap-6 pb-8">
+<h2 class="text-headline-md font-headline-md text-on-surface">Amenities</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-[28px]">wifi</span>
+<span class="text-body-md font-body-md text-on-surface">High-Speed WiFi</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-[28px]">ac_unit</span>
+<span class="text-body-md font-body-md text-on-surface">Air Conditioning</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-[28px]">restaurant</span>
+<span class="text-body-md font-body-md text-on-surface">3 Meals/Day</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-[28px]">local_laundry_service</span>
+<span class="text-body-md font-body-md text-on-surface">Laundry included</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-[28px]">security</span>
+<span class="text-body-md font-body-md text-on-surface">24/7 Security</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column (Sticky Booking Card) -->
+<div class="w-full lg:w-[30%]">
+<div class="sticky top-24 bg-surface-container-lowest rounded-xl p-6 ambient-shadow border border-surface-dim hover-lift flex flex-col gap-6">
+<div class="flex items-end gap-1">
+<span class="text-headline-lg font-headline-lg text-on-surface">₹12,000</span>
+<span class="text-body-md font-body-md text-on-surface-variant pb-1">/ month</span>
+</div>
+<form class="flex flex-col gap-4">
+<div class="flex flex-col gap-2">
+<label class="text-label-sm font-label-sm text-on-surface" for="move-in">Move-in Date</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-surface-dim rounded-lg p-3 text-body-md font-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors appearance-none" id="move-in" type="date"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-label-sm font-label-sm text-on-surface" for="duration">Duration</label>
+<select class="w-full bg-surface-container-lowest border border-surface-dim rounded-lg p-3 text-body-md font-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors appearance-none" id="duration">
+<option>3 months</option>
+<option selected="">6 months</option>
+<option>12 months</option>
+</select>
+</div>
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg text-label-md font-label-md mt-2 hover:bg-primary-container transition-colors shadow-sm" type="button">
+                            Request to Book
+                        </button>
+</form>
+<div class="flex flex-col gap-2 pt-4 border-t border-surface-dim mt-2 text-center">
+<span class="text-label-md font-label-md text-on-surface">Landlord: Rajesh Kumar</span>
+<a class="text-primary text-label-sm font-label-sm hover:underline" href="#">Message Landlord</a>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low dark:bg-surface-container-low border-t border-outline-variant mt-auto">
+<div class="w-full px-margin-desktop py-8 max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-base">
+<span class="text-headline-sm font-headline-sm font-bold text-on-surface dark:text-on-surface">Stay<span class="text-primary">Nest</span></span>
+<nav class="flex flex-wrap gap-4 justify-center">
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim underline transition-all duration-200 text-label-sm font-label-sm" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim underline transition-all duration-200 text-label-sm font-label-sm" href="#">Terms of Service</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim underline transition-all duration-200 text-label-sm font-label-sm" href="#">Help Center</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim underline transition-all duration-200 text-label-sm font-label-sm" href="#">Career</a>
+</nav>
+<span class="text-on-surface-variant text-label-sm font-label-sm">© 2024 StayNest Hospitality Group. All rights reserved.</span>
+</div>
+</footer>
+</body></html>

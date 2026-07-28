@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Property Details - StayNest</title>
+  <style>
+   /* Make all images outside the navigation bar look clickable */
+    body:not(nav) img {
+        cursor: zoom-in;
+        transition: transform 0.2s;
+    }
+    body:not(nav) img:hover {
+        transform: scale(1.02); /* Adds a tiny pop effect on hover */
+    }
+   body { font-family: 'Inter', sans-serif; background: #f7f3ee; color: #1a1a2e; margin: 0; padding: 0; }
+    nav { background: #1a1a2e; padding: 20px 5%; color: white; display: flex; justify-content: space-between; }
+    nav a { color: white; text-decoration: none; font-weight: bold; }
+    
+    .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+    .loading { text-align: center; padding: 50px; font-size: 1.2rem; color: #6b7280; }
+    
+    /* Image Gallery Grid */
+    .gallery { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-bottom: 30px; border-radius: 12px; overflow: hidden; height: 400px; }
+    .main-img { width: 100%; height: 100%; object-fit: cover; }
+    .side-imgs { display: grid; grid-template-rows: 1fr 1fr; gap: 10px; }
+    .side-imgs img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* Layout for info */
+    .content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; }
+    .title h1 { margin: 0 0 10px 0; font-size: 2.2rem; }
+    .location { color: #6b7280; font-size: 1.1rem; margin-bottom: 20px; }
+    
+    .amenities-list { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
+    .amenity { background: #eae6e0; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; }
+    
+    .contact-card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: fit-content; }
+    .contact-card h2 { font-size: 2rem; margin: 0 0 20px 0; color: #e8572a; }
+    .btn { display: block; width: 100%; text-align: center; background: #1a1a2e; color: white; padding: 14px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-bottom: 10px; transition: 0.2s; }
+    .btn-whatsapp { background: #25D366; }
+    .btn:hover { opacity: 0.9; }
+
+    @media (max-width: 768px) {
+      .gallery { grid-template-columns: 1fr; height: auto; }
+      .side-imgs { display: none; } /* Hide smaller images on mobile */
+      .content-grid { grid-template-columns: 1fr; }
+    }
+    /* Booking Modal Styles */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+}
+.modal-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  position: relative;
+}
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+.modal h3 { margin-top: 0; }
+.modal input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0 20px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+.modal button { width: 100%; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html">← Back to StayNest</a>
+  </nav>
+
+  <div class="container" id="propertyDetails">
+    <div class="loading">Loading property details...</div>
+  </div>
+<!-- The Booking Modal -->
+<div id="bookingModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <h3>Request to Book</h3>
+    <p>Enter your details and the landlord will contact you shortly.</p>
+    
+    <form id="bookingForm">
+      <label>Your Name</label>
+      <input type="text" id="tenantName" required placeholder="e.g. Rahul Sharma">
+      
+      <label>Phone Number</label>
+      <input type="tel" id="tenantPhone" required placeholder="e.g. 9876543210">
+      
+      <button type="submit" class="btn">Submit Request</button>
+    </form>
+  </div>
+</div>
+<div id="imageLightbox" onclick="closeLightbox()" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; cursor: zoom-out;">
+      <img id="lightboxImg" src="" style="max-width: 90%; max-height: 90%; border-radius: 8px; object-fit: contain; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+      <div style="position: absolute; top: 20px; right: 30px; color: white; font-size: 2rem; font-weight: bold; cursor: pointer;">&times;</div>
+    </div>
+  <script>
+    // --- 🔍 IMAGE ZOOM (LIGHTBOX) LOGIC ---
+    
+    // Listen for clicks anywhere on the entire page
+    document.addEventListener('click', function(event) {
+      // Check if the thing they clicked was an Image (and NOT the logo in the navbar)
+      if (event.target.tagName === 'IMG' && !event.target.closest('nav')) {
+        const lightbox = document.getElementById('imageLightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        
+        // Grab the source of the clicked image and put it in the fullscreen box
+        lightboxImg.src = event.target.src; 
+        
+        // Change display from 'none' to 'flex' to show it and center it
+        lightbox.style.display = 'flex'; 
+      }
+    });
+
+    // Function to hide the lightbox when clicking the dark background or the X
+    function closeLightbox() {
+      document.getElementById('imageLightbox').style.display = 'none';
+      document.getElementById('lightboxImg').src = ""; // Clear the image memory
+    }
+    // 1. Get the property ID from the URL (e.g., ?id=64abcd1234...)
+    const urlParams = new URLSearchParams(window.location.search);
+    const propertyId = urlParams.get('id');
+
+    // 2. Fetch the specific listing from the backend
+    async function fetchPropertyDetails() {
+      try {
+        const response = await fetch(`http://localhost:5000/api/listings/${propertyId}`);
+        if (!response.ok) throw new Error("Property not found");
+        
+        const pg = await response.json();
+        renderProperty(pg);
+      } catch (error) {
+        document.getElementById('propertyDetails').innerHTML = `<h2>Oops! Property not found.</h2><a href="index.html">Go back home</a>`;
+      }
+    }
+
+    // 3. Generate the HTML with the fetched data
+    function renderProperty(pg) {
+      const photos = pg.mediaUrls && pg.mediaUrls.length > 0 ? pg.mediaUrls : ['https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=1000&q=80'];
+      const mainPhoto = photos[0];
+      const sidePhoto1 = photos[1] || mainPhoto; 
+      const sidePhoto2 = photos[2] || mainPhoto;
+
+      const html = `
+        <div class="gallery">
+          <img src="${mainPhoto}" class="main-img" alt="Main view">
+          <div class="side-imgs">
+            <img src="${sidePhoto1}" alt="Side view 1">
+            <img src="${sidePhoto2}" alt="Side view 2">
+          </div>
+        </div>
+
+        <div class="content-grid">
+          <div class="main-info">
+            <div class="title">
+              <h1>${pg.propertyName}</h1>
+              <div class="location">📍 ${pg.fullAddress}, ${pg.city}</div>
+            </div>
+
+            <h3>Room Details</h3>
+            <p><strong>Type:</strong> ${pg.roomType}</p>
+            <p><strong>For:</strong> ${pg.pgFor}</p>
+            <p><strong>Available From:</strong> ${new Date(pg.availableFrom).toLocaleDateString()}</p>
+            <p><strong>Vacancies:</strong> ${pg.roomsAvailable || "Not specified"}</p>
+
+            <h3>Amenities</h3>
+            <div class="amenities-list">
+              ${(pg.amenities || []).map(a => `<div class="amenity">✓ ${a}</div>`).join('')}
+            </div>
+
+            <h3>Description & Rules</h3>
+    <p style="line-height: 1.8;">${pg.description || "No specific rules provided by the landlord."}</p>
+    
+    <button onclick="openModal()" style="margin-top: 25px; width: 100%; max-width: 400px; padding: 15px; background-color: #e8572a; color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer;">
+      Request to Book Room
+    </button>
+    
+  </div>
+          <div class="sidebar">
+            <div class="contact-card">
+              <h2>₹${pg.monthlyRent.toLocaleString('en-IN')}<span style="font-size:1rem; color:#6b7280;">/mo</span></h2>
+              <p style="color:#6b7280; margin-bottom: 20px;">Security Deposit: ₹${pg.securityDeposit || 0}</p>
+              
+              <p><strong>Landlord:</strong> ${pg.ownerName}</p>
+              
+              <a href="tel:${pg.phoneNumber}" class="btn">📞 Call ${pg.ownerName}</a>
+              ${pg.whatsappNumber ? `<a href="https://wa.me/91${pg.whatsappNumber.replace(/\D/g,'')}" target="_blank" class="btn btn-whatsapp">💬 Chat on WhatsApp</a>` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('propertyDetails').innerHTML = html;
+    }
+
+    // Start the fetch when the page loads
+    fetchPropertyDetails();
+    // --- Modal and Booking Logic ---
+const modal = document.getElementById("bookingModal");
+
+function openModal() {
+  modal.style.display = "flex";
+}
+
+function closeModal() {
+  modal.style.display = "none";
+}
+
+// Close modal if user clicks anywhere in the dark background
+window.onclick = function(event) {
+  if (event.target == modal) {
+    closeModal();
+  }
+}
+
+// Handle form submission to send the lead
+document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const tenantName = document.getElementById('tenantName').value;
+  const tenantPhone = document.getElementById('tenantPhone').value;
+  
+  try {
+    const response = await fetch('http://localhost:5000/api/bookings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        listingId: propertyId, // Using your exact variable from line 112!
+        tenantName: tenantName,
+        tenantPhone: tenantPhone
+      })
+    });
+
+    if (response.ok) {
+      alert("Success! The landlord will contact you soon.");
+      closeModal();
+      document.getElementById('bookingForm').reset();
+    } else {
+      alert("Failed to send request. Please try again.");
+    }
+  } catch (error) {
+    console.error("Error submitting booking:", error);
+    alert("An error occurred.");
+  }
+});
+  </script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta char+et="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - StayNest</title>
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f7f3ee; margin: 0; padding: 0; color: #1a1a2e; }
+    nav { background: #e8572a; padding: 20px; color: white; text-align: center; font-size: 1.5rem; font-weight: bold; }
+    nav a { color: white; text-decoration: none; font-size: 1rem; float: left; margin-top: 5px; }
+    .container { max-width: 1000px; margin: 40px auto; padding: 20px; }
+    
+    .pending-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-bottom: 50px; }
+    .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); padding: 15px; border: 2px solid #ffe4d6; }
+    .card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; }
+    .card h3 { margin: 0 0 10px 0; }
+    .card p { margin: 5px 0; color: #6b7280; }
+    
+    .btn-approve { background: #25D366; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 1rem; transition: 0.2s; }
+    .btn-approve:hover { background: #1ebd5a; }
+
+    /* Style for the Lead Cards */
+    .lead-card { background: white; border-left: 5px solid #e8572a; border-radius: 8px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 15px; }
+    .lead-card h4 { margin: 0 0 5px 0; color: #e8572a; }
+    .lead-card p { margin: 5px 0; }
+  </style>
+</head> 
+<body>
+
+  <nav>
+    <a href="index.html">← Back to Main Site</a>
+    🛡️ StayNest Secret Admin Dashboard
+  </nav>
+
+  <div class="container">
+    
+    <!-- NEW: Booking Leads Section -->
+    <h2>Tenant Booking Leads 📞</h2>
+    <div id="leadsGrid">
+      <p>Loading leads...</p>
+    </div>
+
+    <hr style="margin: 40px 0; border: 1px solid #ccc;">
+
+    <!-- OLD: Pending Properties Section -->
+    <h2>Pending Listings (Needs Approval) 🏠</h2>
+    <div id="pendingGrid" class="pending-grid">
+      <p>Loading pending listings...</p>
+    </div>
+
+  </div>
+
+  <script>
+    // --- 1. FETCH BOOKING LEADS ---
+    
+    async function fetchLeads() {
+      try {
+        const response = await fetch('http://localhost:5000/api/admin/bookings');
+        const leads = await response.json();
+        
+        const grid = document.getElementById('leadsGrid');
+        grid.innerHTML = ''; // Clear loading text
+
+        if (leads.length === 0) {
+          grid.innerHTML = '<p>No booking requests yet.</p>';
+          return;
+        }
+
+        leads.forEach(lead => {
+          const card = document.createElement('div');
+          card.className = 'lead-card';
+          
+          // Fallbacks just in case the property was deleted from the database
+          const propertyName = lead.listingId ? lead.listingId.propertyName : "Unknown Property";
+          const city = lead.listingId ? lead.listingId.city : "Unknown City";
+          const date = new Date(lead.createdAt).toLocaleDateString();
+
+         card.innerHTML = `
+            <h4>Interested in: ${propertyName} (${city})</h4>
+            <p><strong>👤 Name:</strong> ${lead.tenantName}</p>
+            <p><strong>📞 Phone:</strong> <a href="tel:${lead.tenantPhone}">${lead.tenantPhone}</a></p>
+            <p><small>📅 Requested on: ${date}</small></p>
+          `;
+          grid.appendChild(card);
+        });
+      } catch (error) {
+        console.error("Error fetching leads:", error);
+      }
+    }
+
+    // --- 2. FETCH PENDING LISTINGS ---
+    async function fetchPending() {
+      try {
+        const response = await fetch('http://localhost:5000/api/admin/listings/pending');
+        const listings = await response.json();
+        
+        const grid = document.getElementById('pendingGrid');
+        grid.innerHTML = ''; 
+
+        if (listings.length === 0) {
+          grid.innerHTML = '<h3>No pending listings! You are all caught up. 🎉</h3>';
+          return;
+        }
+
+        listings.forEach(pg => {
+          const mainImage = (pg.mediaUrls && pg.mediaUrls.length > 0) ? pg.mediaUrls[0] : 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=500&q=80';
+          
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <img src="${mainImage}" alt="Property Image">
+            <h3>${pg.propertyName}</h3>
+            <p>📍 ${pg.city}</p>
+            <p>💰 ₹${pg.monthlyRent.toLocaleString('en-IN')}/month</p>
+            <p>👤 Landlord: ${pg.ownerName}</p>
+            <button class="btn-approve" onclick="approveListing('${pg._id}')">✅ Approve & Publish</button>
+          `;
+          grid.appendChild(card);
+        });
+      } catch (error) {
+        console.error("Error fetching pending listings:", error);
+      }
+    }
+
+    // --- 3. APPROVE LISTING ---
+    async function approveListing(id) {
+      if (!confirm("Are you sure you want to publish this listing live?")) return;
+
+      try {
+        const response = await fetch(`http://localhost:5000/api/admin/listings/${id}/approve`, {
+          method: 'PATCH'
+        });
+
+        if (response.ok) {
+          alert("Listing Approved! It is now live on StayNest.");
+          fetchPending(); 
+        } else {
+          alert("Something went wrong!");
+        }
+      } catch (error) {
+        console.error("Error approving:", error);
+      }
+    }
+
+    // Run both fetches when the page loads
+    fetchLeads();
+    fetchPending();
+  </script>
+</body>
+</html>

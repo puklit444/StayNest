@@ -1,1125 +1,589 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="light" lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>StayNest — PG & Rental Listings</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>StayNest - Premium PG & Rentals</title>
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ab2e00",
+                        "primary-container": "#cf4519",
+                        "on-primary": "#ffffff",
+                        "surface": "#fbf9f8",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#eae8e7",
+                        "surface-container-low": "#f5f3f3",
+                        "on-surface": "#1b1c1c",
+                        "on-surface-variant": "#5a413a",
+                        "surface-dim": "#dbd9d9",
+                        "primary-fixed": "#ffdbd1",
+                        "on-primary-fixed": "#3b0a00",
+                        "outline-variant": "#e2bfb5"
+                    },
+                    spacing: {
+                        "container-max": "1280px",
+                        "section-gap": "80px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "40px",
+                        "base": "8px"
+                    },
+                    fontSize: {
+                        "label-sm": ["12px", { lineHeight: "16px", fontWeight: "600" }],
+                        "label-md": ["14px", { lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "500" }],
+                        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+                        "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "700" }],
+                        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600" }],
+                        "display-lg-mobile": ["36px", { lineHeight: "42px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }]
+                    },
+                    fontFamily: {
+                        "label-md": ["Inter", "sans-serif"],
+                        "headline-lg": ["Inter", "sans-serif"],
+                        "label-sm": ["Inter", "sans-serif"],
+                        "body-lg": ["Inter", "sans-serif"],
+                        "headline-md": ["Inter", "sans-serif"],
+                        "display-lg-mobile": ["Inter", "sans-serif"],
+                        "body-md": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
 
-  :root {
-    --ink: #1a1a2e;
-    --clay: #e8572a;
-    --sand: #f7f3ee;
-    --mist: #eae6e0;
-    --leaf: #3a966d;
-    --leaf-light: #e8f5f0;
-    --white: #ffffff;
-    --text-muted: #6b7280;
-    --border: #ddd8d0;
-    --shadow: 0 2px 12px rgba(26,26,46,0.08);
-    --shadow-lg: 0 8px 32px rgba(26,26,46,0.13);
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Inter', sans-serif;
-    background: var(--sand);
-    color: var(--ink);
-    line-height: 1.6;
-  }
-
-  /* ── NAV ── */
-  nav {
-    background: var(--ink);
-    padding: 0 5%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 64px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .logo {
-    font-family: 'Fraunces', serif;
-    font-size: 1.5rem;
-    color: var(--white);
-    letter-spacing: -0.5px;
-  }
-  .logo span { color: var(--clay); }
-  .nav-links { display: flex; gap: 32px; align-items: center; }
-  .nav-links a {
-    color: rgba(255,255,255,0.75);
-    text-decoration: none;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--white); }
-  .btn-nav {
-    background: var(--clay);
-    color: var(--white) !important;
-    padding: 8px 20px;
-    border-radius: 6px;
-    font-weight: 600 !important;
-  }
-  .btn-nav:hover { background: #d44a1f; }
-
-  /* ── HERO ── */
-  .hero {
-    background: var(--ink);
-    padding: 80px 5% 64px;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    right: -80px; top: -80px;
-    width: 420px; height: 420px;
-    background: radial-gradient(circle, rgba(232,87,42,0.18) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-  .hero-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
-  }
-  .hero-text h1 {
-    font-family: 'Fraunces', serif;
-    font-size: clamp(2.2rem, 4vw, 3.2rem);
-    color: var(--white);
-    line-height: 1.15;
-    margin-bottom: 16px;
-  }
-  .hero-text h1 em {
-    font-style: italic;
-    color: var(--clay);
-  }
-  .hero-text p {
-    color: rgb(241, 234, 234);
-    font-size: 1.05rem;
-    margin-bottom: 32px;
-    max-width: 420px;
-  }
-  .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
-  .btn-primary {
-    background: var(--clay);
-    color: var(--white);
-    padding: 12px 28px;
-    border-radius: 8px;
-    border: none;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background 0.2s, transform 0.15s;
-    display: inline-block;
-  }
-  .btn-primary:hover { background: #d44a1f; transform: translateY(-1px); }
-  .btn-ghost {
-    background: transparent;
-    color: rgba(255,255,255,0.8);
-    padding: 12px 28px;
-    border-radius: 8px;
-    border: 1.5px solid rgba(255,255,255,0.2);
-    font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer;
-    text-decoration: none;
-    transition: border-color 0.2s, color 0.2s;
-    display: inline-block;
-  }
-  .btn-ghost:hover { border-color: rgba(255,255,255,0.5); color: var(--white); }
-
-  /* Hero stats */
-  .hero-stats {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .stat-card {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 12px;
-    padding: 20px 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .stat-icon {
-    width: 44px; height: 44px;
-    background: rgba(232,87,42,0.2);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.3rem;
-    flex-shrink: 0;
-  }
-  .stat-card h3 {
-    font-family: 'Fraunces', serif;
-    font-size: 1.6rem;
-    color: var(--white);
-    line-height: 1;
-  }
-  .stat-card p { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 2px; }
-
-  /* ── SEARCH BAR ── */
-  .search-section {
-    background: var(--white);
-    padding: 28px 5%;
-    box-shadow: 0 2px 8px rgba(26,26,46,0.06);
-  }
-  .search-bar {
-    max-width: 900px;
-    margin: 0 auto;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  .search-bar input, .search-bar select {
-    flex: 1;
-    min-width: 160px;
-    padding: 12px 16px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-family: inherit;
-    background: var(--sand);
-    color: var(--ink);
-    transition: border-color 0.2s;
-  }
-  .search-bar input:focus, .search-bar select:focus {
-    outline: none;
-    border-color: var(--clay);
-  }
-  .search-bar button {
-    background: var(--clay);
-    color: var(--white);
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 0.9rem;
-    white-space: nowrap;
-  }
-
-  /* ── SECTIONS ── */
-  .section { padding: 64px 5%; }
-  .section-header {
-    max-width: 1100px;
-    margin: 0 auto 40px;
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 16px;
-  }
-  .section-header h2 {
-    font-family: 'Fraunces', serif;
-    font-size: 1.9rem;
-    color: var(--ink);
-  }
-  .section-header a {
-    color: var(--clay);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.9rem;
-  }
-  .eyebrow {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--clay);
-    margin-bottom: 6px;
-  }
-
-  /* ── PG CARDS ── */
-  .cards-grid {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 24px;
-  }
-  .pg-card {
-    background: var(--white);
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    transition: box-shadow 0.25s, transform 0.2s;
-    cursor: pointer;
-  }
-  .pg-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
-  .card-img {
-    height: 190px;
-    position: relative;
-    overflow: hidden;
-  }
-  .card-img img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s;
-  }
-  .pg-card:hover .card-img img { transform: scale(1.04); }
-  .badge {
-    position: absolute;
-    top: 12px; left: 12px;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-  }
-  .badge-available { background: var(--leaf); color: #fff; }
-  .badge-limited { background: #f59e0b; color: #fff; }
-  .badge-full { background: #ef4444; color: #fff; }
-  .badge-girls { background: #ec4899; color: #fff; }
-  .badge-boys { background: #3b82f6; color: #fff; }
-  .wishlist-btn {
-    position: absolute;
-    top: 12px; right: 12px;
-    width: 32px; height: 32px;
-    background: white;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    cursor: pointer;
-    border: none;
-    transition: transform 0.2s;
-  }
-  .wishlist-btn:hover { transform: scale(1.1); }
-  .card-body { padding: 16px 20px 20px; }
-  .card-body h3 {
-    font-family: 'Fraunces', serif;
-    font-size: 1.1rem;
-    margin-bottom: 4px;
-    color: var(--ink);
-  }
-  .card-location {
-    color: var(--text-muted);
-    font-size: 0.82rem;
-    display: flex; align-items: center; gap: 4px;
-    margin-bottom: 10px;
-  }
-  .card-amenities {
-    display: flex; flex-wrap: wrap; gap: 6px;
-    margin-bottom: 14px;
-  }
-  .amenity-tag {
-    background: var(--mist);
-    color: var(--text-muted);
-    font-size: 0.73rem;
-    padding: 3px 9px;
-    border-radius: 20px;
-  }
-  .card-footer {
-    display: flex; align-items: center; justify-content: space-between;
-    padding-top: 14px;
-    border-top: 1px solid var(--border);
-  }
-  .price { font-family: 'Fraunces', serif; font-size: 1.25rem; color: var(--ink); }
-  .price span { font-family: 'Inter', sans-serif; font-size: 0.78rem; color: var(--text-muted); font-weight: 400; }
-  .btn-contact {
-    background: var(--ink);
-    color: var(--white);
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .btn-contact:hover { background: var(--clay); }
-
-  /* ── HOW IT WORKS ── */
-  .how-section {
-    background: var(--ink);
-    padding: 64px 5%;
-  }
-  .how-section h2 {
-    font-family: 'Fraunces', serif;
-    font-size: 1.9rem;
-    color: var(--white);
-    text-align: center;
-    margin-bottom: 48px;
-  }
-  .how-section h2 em { color: var(--clay); font-style: italic; }
-  .steps-grid {
-    max-width: 900px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 32px;
-  }
-  .step {
-    text-align: center;
-  }
-  .step-num {
-    width: 48px; height: 48px;
-    background: var(--clay);
-    color: white;
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Fraunces', serif;
-    font-size: 1.4rem;
-    margin: 0 auto 16px;
-  }
-  .step h3 { color: var(--white); font-size: 1rem; margin-bottom: 8px; }
-  .step p { color: rgba(255,255,255,0.5); font-size: 0.85rem; }
-
-  /* ── LIST YOUR PG FORM ── */
-  .list-section {
-    background: var(--white);
-    padding: 64px 5%;
-  }
-  .form-wrapper {
-    max-width: 720px;
-    margin: 0 auto;
-  }
-  .form-wrapper h2 {
-    font-family: 'Fraunces', serif;
-    font-size: 2rem;
-    margin-bottom: 8px;
-    color: var(--ink);
-  }
-  .form-wrapper > p {
-    color: var(--text-muted);
-    margin-bottom: 36px;
-  }
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-  }
-  .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-group.full { grid-column: 1 / -1; }
-  .form-group label {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--ink);
-    letter-spacing: 0.3px;
-  }
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    padding: 11px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-family: inherit;
-    color: var(--ink);
-    background: var(--sand);
-    transition: border-color 0.2s;
-    resize: none;
-  }
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus {
-    outline: none;
-    border-color: var(--clay);
-  }
-  .amenities-check {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-  .check-item {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 0.85rem;
-    cursor: pointer;
-  }
-  .check-item input[type="checkbox"] { accent-color: var(--clay); }
-  .upload-area {
-    border: 2px dashed var(--border);
-    border-radius: 10px;
-    padding: 28px;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
-  }
-  .upload-area:hover { border-color: var(--clay); background: #fff5f2; }
-  .upload-area p { color: var(--text-muted); font-size: 0.85rem; margin-top: 8px; }
-  .upload-area span { font-size: 2rem; }
-  .submit-row {
-    margin-top: 28px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .submit-row button {
-    background: var(--clay);
-    color: white;
-    border: none;
-    padding: 14px 36px;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
-  }
-  .submit-row button:hover { background: #d44a1f; transform: translateY(-1px); }
-  .submit-row small { color: var(--text-muted); font-size: 0.78rem; }
-
-  /* ── TESTIMONIALS ── */
-  .testi-grid {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 24px;
-  }
-  .testi-card {
-    background: var(--white);
-    border-radius: 14px;
-    padding: 28px;
-    border-left: 4px solid var(--clay);
-  }
-  .testi-card p {
-    font-size: 0.92rem;
-    color: var(--text-muted);
-    margin-bottom: 20px;
-    line-height: 1.7;
-  }
-  .testi-author { display: flex; align-items: center; gap: 12px; }
-  .avatar {
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    background: var(--clay);
-    display: flex; align-items: center; justify-content: center;
-    color: white;
-    font-weight: 700;
-    font-size: 0.9rem;
-  }
-  .testi-author h4 { font-size: 0.9rem; font-weight: 600; }
-  .testi-author span { font-size: 0.78rem; color: var(--text-muted); }
-
-  /* ── CONTACT ── */
-  .contact-section {
-    background: var(--leaf-light);
-    padding: 64px 5%;
-    text-align: center;
-  }
-  .contact-section h2 {
-    font-family: 'Fraunces', serif;
-    font-size: 2rem;
-    color: var(--ink);
-    margin-bottom: 8px;
-  }
-  .contact-section p { color: var(--text-muted); margin-bottom: 28px; }
-  .contact-cards {
-    max-width: 700px;
-    margin: 0 auto 32px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
-  .contact-card {
-    background: var(--white);
-    border-radius: 12px;
-    padding: 24px 16px;
-    text-align: center;
-  }
-  .contact-card .icon { font-size: 1.8rem; margin-bottom: 10px; }
-  .contact-card h4 { font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; }
-  .contact-card a { color: var(--clay); font-size: 0.82rem; text-decoration: none; }
-
-  /* ── FOOTER ── */
-  footer {
-    background: var(--ink);
-    color: rgba(255,255,255,0.5);
-    padding: 40px 5%;
-    text-align: center;
-    font-size: 0.83rem;
-  }
-  footer a { color: rgba(255,255,255,0.6); text-decoration: none; margin: 0 12px; }
-  footer a:hover { color: var(--clay); }
-  .footer-logo {
-    font-family: 'Fraunces', serif;
-    font-size: 1.3rem;
-    color: var(--white);
-    margin-bottom: 12px;
-  }
-  .footer-logo span { color: var(--clay); }
-
-  /* ── MODAL ── */
-  .modal-overlay {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(26,26,46,0.65);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  .modal-overlay.active { display: flex; }
-  .modal {
-    background: var(--white);
-    border-radius: 16px;
-    padding: 36px;
-    max-width: 480px;
-    width: 100%;
-    position: relative;
-    animation: modalIn 0.25s ease;
-  }
-  @keyframes modalIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to   { opacity: 1; transform: scale(1); }
-  }
-  .modal-close {
-    position: absolute; top: 16px; right: 16px;
-    background: none; border: none; font-size: 1.3rem;
-    cursor: pointer; color: var(--text-muted);
-    line-height: 1;
-  }
-  .modal h3 {
-    font-family: 'Fraunces', serif;
-    font-size: 1.5rem;
-    margin-bottom: 6px;
-  }
-  .modal > p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px; }
-  .modal-form { display: flex; flex-direction: column; gap: 14px; }
-  .modal-form input, .modal-form textarea {
-    padding: 10px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-family: inherit;
-    background: var(--sand);
-  }
-  .modal-form input:focus, .modal-form textarea:focus {
-    outline: none; border-color: var(--clay);
-  }
-  .modal-form button {
-    background: var(--clay);
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 0.95rem;
-  }
-
-  /* ── TOAST ── */
-  .toast {
-    position: fixed; bottom: 24px; right: 24px;
-    background: var(--ink);
-    color: white;
-    padding: 14px 22px;
-    border-radius: 10px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    z-index: 9999;
-    transform: translateY(80px);
-    opacity: 0;
-    transition: all 0.35s cubic-bezier(.34,1.56,.64,1);
-    box-shadow: var(--shadow-lg);
-    display: flex; align-items: center; gap: 10px;
-  }
-  .toast.show { transform: translateY(0); opacity: 1; }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 768px) {
-    .hero-inner { grid-template-columns: 1fr; gap: 40px; }
-    .hero-stats { flex-direction: row; flex-wrap: wrap; }
-    .stat-card { flex: 1; min-width: 200px; }
-    .form-grid { grid-template-columns: 1fr; }
-    .amenities-check { grid-template-columns: repeat(2,1fr); }
-    .contact-cards { grid-template-columns: 1fr; }
-    .nav-links .hide-mobile { display: none; }
-  }
-</style>
+    <style>
+        body { 
+            background-color: #f7f3ee; 
+            font-family: 'Inter', sans-serif; 
+        }
+        .ambient-shadow { box-shadow: 0px 4px 20px rgba(26, 26, 46, 0.05); }
+        .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .hover-lift:hover { transform: translateY(-4px); box-shadow: 0px 12px 30px rgba(26, 26, 46, 0.1); }
+    </style>
 </head>
-<body>
+<body class="font-body-md text-on-surface min-h-screen flex flex-col">
 
-<!-- ── NAV ── -->
-<nav>
-  <div class="logo">Stay<span>Nest</span></div>
-  <div class="nav-links">
-    <a href="#listings" class="hide-mobile">Browse PG's</a>
-    <a href="#list" class="hide-mobile">List Your PG</a>
-    <a href="#contact" class="hide-mobile">Contact</a>
-    <a href="#list" class="btn-nav">+ Add Listing</a>
-  </div>
-</nav>
-
-<!-- ── HERO ── -->
-<section class="hero">
-  <div class="hero-inner">
-    <div class="hero-text">
-      <div class="eyebrow">For landlords &amp; tenants</div>
-      <h1>Find the right<br><em>paying guest</em><br>in your city</h1>
-      <p>List your PG in minutes. Get verified tenants directly. No broker, no hidden charges.</p>
-      <div class="hero-btns">
-        <a href="#list" class="btn-primary">List Your PG Free</a>
-        <a href="#listings" class="btn-ghost">Browse Rooms</a>
-      </div>
-    </div>
-    <div class="hero-stats">
-      <div class="stat-card">
-        <div class="stat-icon">🏠</div>
-        <div>
-          <h3>200+</h3>
-          <p>Active PG listings across Jaipur</p>
+    <header class="bg-surface shadow-sm sticky top-0 z-50">
+        <div class="flex justify-between items-center w-full px-margin-desktop py-4 max-w-container-max mx-auto">
+            <div class="flex items-center gap-2 cursor-pointer">
+                <span class="text-headline-md font-headline-md font-extrabold text-on-surface">Stay<span class="text-primary">Nest</span></span>
+            </div>
+            
+            <nav class="hidden md:flex items-center gap-gutter">
+                <a class="text-primary border-b-2 border-primary pb-1 text-label-md opacity-80" href="index.html">Browse PG's</a>
+                <a class="text-on-surface-variant hover:text-primary transition-colors text-label-md" href="#">Contact</a>
+            </nav>
+            
+            <div id="userMenu" class="hidden md:flex items-center gap-gutter">
+                </div>
         </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">✅</div>
-        <div>
-          <h3>98%</h3>
-          <p>Landlords find a tenant within 2 weeks</p>
+    </header>
+
+    <main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8">
+        
+        <section class="bg-surface-container-lowest rounded-2xl p-8 mb-10 ambient-shadow border border-surface-dim text-center">
+            <h1 class="text-headline-lg md:text-display-lg font-headline-lg text-on-surface mb-4">Find your perfect stay.</h1>
+            <p class="text-body-lg text-on-surface-variant mb-8">Premium co-living spaces tailored for students and professionals.</p>
+            
+            <div class="flex flex-col md:flex-row gap-4 justify-center max-w-3xl mx-auto">
+                <div class="relative flex-grow">
+                    <span class="material-symbols-outlined absolute left-4 top-3.5 text-on-surface-variant">search</span>
+                    <input type="text" id="searchInput" placeholder="Search by city, area, or property name..." 
+                        class="w-full bg-surface border border-surface-dim rounded-xl py-3 pl-12 pr-4 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors">
+                </div>
+                <button onclick="filterListings()" class="bg-primary text-on-primary px-8 py-3 rounded-xl font-label-md hover:bg-primary-container transition-colors shadow-sm">
+                    Search
+                </button>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-4 mt-6">
+                <select id="filterType" onchange="filterListings()" class="bg-surface border border-surface-dim rounded-lg px-4 py-2 text-label-md text-on-surface focus:outline-none focus:border-primary">
+                    <option value="">All Room Types</option>
+                    <option value="Single">Single Occupancy</option>
+                    <option value="Double">Double Occupancy</option>
+                    <option value="Triple">Triple Occupancy</option>
+                </select>
+                <select id="filterGender" onchange="filterListings()" class="bg-surface border border-surface-dim rounded-lg px-4 py-2 text-label-md text-on-surface focus:outline-none focus:border-primary">
+                    <option value="">All Genders</option>
+                    <option value="Boys">Boys Only</option>
+                    <option value="Girls">Girls Only</option>
+                    <option value="Co-ed">Co-ed</option>
+                </select>
+                <select id="filterBudget" onchange="filterListings()" class="bg-surface border border-surface-dim rounded-lg px-4 py-2 text-label-md text-on-surface focus:outline-none focus:border-primary">
+                    <option value="">Any Budget</option>
+                    <option value="10000">Under ₹10,000</option>
+                    <option value="15000">Under ₹15,000</option>
+                    <option value="20000">Under ₹20,000</option>
+                </select>
+                <button onclick="resetFilter()" class="text-on-surface-variant hover:text-primary text-label-md font-label-md underline px-2 py-2">Reset</button>
+            </div>
+        </section>
+
+        <div class="flex justify-between items-end mb-6">
+            <h2 class="text-headline-md font-headline-md text-on-surface">Available Properties</h2>
         </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">💸</div>
-        <div>
-          <h3>Zero</h3>
-          <p>Brokerage — connect directly</p>
+
+        <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div class="col-span-full text-center py-12 text-on-surface-variant">Loading premium properties...</div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+<section class="bg-[#1a1a2e] text-surface-container-lowest py-16 mt-20 rounded-[32px] px-8 ambient-shadow">
+            <div class="text-center mb-12">
+                <h2 class="text-headline-lg font-headline-lg">List your PG in <span class="text-primary-container italic font-bold">4 simple steps</span></h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-5xl mx-auto text-center">
+                <div class="flex flex-col items-center">
+                    <div class="bg-primary-container text-on-primary w-14 h-14 flex items-center justify-center rounded-2xl text-headline-sm font-bold mb-6 shadow-lg">1</div>
+                    <h3 class="text-headline-sm font-headline-sm mb-3">Create Profile</h3>
+                    <p class="text-body-md text-[#a0a0b8]">Sign up as a landlord with your phone number — takes 30 seconds.</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-primary-container text-on-primary w-14 h-14 flex items-center justify-center rounded-2xl text-headline-sm font-bold mb-6 shadow-lg">2</div>
+                    <h3 class="text-headline-sm font-headline-sm mb-3">Add Your PG</h3>
+                    <p class="text-body-md text-[#a0a0b8]">Fill in room details, amenities, photos, and rent. Go live instantly.</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-primary-container text-on-primary w-14 h-14 flex items-center justify-center rounded-2xl text-headline-sm font-bold mb-6 shadow-lg">3</div>
+                    <h3 class="text-headline-sm font-headline-sm mb-3">Get Enquiries</h3>
+                    <p class="text-body-md text-[#a0a0b8]">Interested tenants contact you directly — WhatsApp or call.</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-primary-container text-on-primary w-14 h-14 flex items-center justify-center rounded-2xl text-headline-sm font-bold mb-6 shadow-lg">4</div>
+                    <h3 class="text-headline-sm font-headline-sm mb-3">Rent It Out</h3>
+                    <p class="text-body-md text-[#a0a0b8]">Finalize the deal on your terms. Mark as occupied in one click.</p>
+                </div>
+            </div>
+        </section>
 
-<!-- ── SEARCH ── -->
-<div class="search-section">
-  <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="🔍  City, locality, or landmark" />
-    <select id="filterType">
-      <option value="">Room Type</option>
-      <option>Single Occupancy</option>
-      <option>Double Sharing</option>
-      <option>Triple Sharing</option>
-      <option>Entire Flat</option>
-    </select>
-    <select id="filterGender">
-      <option value="">For Whom</option>
-      <option>Boys</option>
-      <option>Girls</option>
-      <option>Co-ed</option>
-    </select>
-    <select id="filterBudget">
-      <option value="">Budget</option>
-      <option value="5000">Under ₹5,000</option>
-      <option value="8000">Under ₹8,000</option>
-      <option value="12000">Under ₹12,000</option>
-      <option value="20000">Under ₹20,000</option>
-    </select>
-    <button onclick="filterListings()">Search</button>
-  </div>
-</div>
+        <section class="py-20 mt-10">
+            <div class="text-center mb-12">
+                <p class="text-primary-container text-label-sm font-bold tracking-widest uppercase mb-3">What Landlords Say</p>
+                <h2 class="text-headline-lg font-headline-lg text-on-surface">Trusted by property owners</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                <div class="bg-surface-container-lowest p-8 rounded-2xl ambient-shadow border-l-4 border-primary-container hover-lift">
+                    <p class="text-body-md text-on-surface-variant mb-8 italic">"Listed my PG on a Sunday evening and had 3 serious enquiries by Monday morning. The platform is clean and very easy to use."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="bg-primary-container text-on-primary w-12 h-12 rounded-full flex items-center justify-center font-bold text-label-md">RK</div>
+                        <div>
+                            <h4 class="text-label-md font-bold text-on-surface">Ramesh Kumar</h4>
+                            <p class="text-label-sm text-on-surface-variant">Landlord, Pune</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-surface-container-lowest p-8 rounded-2xl ambient-shadow border-l-4 border-primary-container hover-lift">
+                    <p class="text-body-md text-on-surface-variant mb-8 italic">"No broker involved. I speak directly with tenants, verify them myself, and decide. That level of control is rare on other platforms."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="bg-primary-container text-on-primary w-12 h-12 rounded-full flex items-center justify-center font-bold text-label-md">SP</div>
+                        <div>
+                            <h4 class="text-label-md font-bold text-on-surface">Sunita Patil</h4>
+                            <p class="text-label-sm text-on-surface-variant">Landlord, Bangalore</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-surface-container-lowest p-8 rounded-2xl ambient-shadow border-l-4 border-primary-container hover-lift">
+                    <p class="text-body-md text-on-surface-variant mb-8 italic">"My PG has 12 rooms and I manage all vacancies through StayNest. The search filters bring exactly the right kind of tenants."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="bg-primary-container text-on-primary w-12 h-12 rounded-full flex items-center justify-center font-bold text-label-md">AJ</div>
+                        <div>
+                            <h4 class="text-label-md font-bold text-on-surface">Pulkit</h4>
+                            <p class="text-label-sm text-on-surface-variant">Landlord, Jodhpur</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-<!-- ── LISTINGS ── -->
-<section class="section" id="listings" style="background:var(--sand);">
-  <div class="section-header">
-    <div>
-      <div class="eyebrow">Available Now</div>
-      <h2>Featured PG Rooms</h2>
-    </div>
-    <a href="#" onclick="resetFilter();return false;">View All</a>
-  </div>
-  <div class="cards-grid" id="cardsGrid">
-    <!-- injected by JS -->
-  </div>
-</section>
+      
+<!-- ========================================== -->
+        <!-- FULL LANDING PAGE SECTIONS                 -->
+        <!-- ========================================== -->
 
-<!-- ── HOW IT WORKS ── -->
-<section class="how-section" id="how">
-  <h2>List your PG in <em>4 simple steps</em></h2>
-  <div class="steps-grid">
-    <div class="step">
-      <div class="step-num">1</div>
-      <h3>Create Profile</h3>
-      <p>Sign up as a landlord with your phone number — takes 30 seconds.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <h3>Add Your PG</h3>
-      <p>Fill in room details, amenities, photos, and rent. Go live instantly.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <h3>Get Enquiries</h3>
-      <p>Interested tenants contact you directly — WhatsApp or call.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">4</div>
-      <h3>Rent It Out</h3>
-      <p>Finalize the deal on your terms. Mark as occupied in one click.</p>
-    </div>
-  </div>
-</section>
+        <!-- 1. 4 Simple Steps Section (Dark Theme) -->
+        <section class="bg-[#1a1a2e] text-surface-container-lowest py-16 mt-20 rounded-[32px] px-8 ambient-shadow">
+            <div class="text-center mb-12">
+                <h2 class="text-headline-lg font-headline-lg">List your PG in <span class="text-primary-container italic font-bold">4 simple steps</span></h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-5xl mx-auto text-center">
+                <div class="flex flex-col items-center">
+                    <div class="bg-primary-container text-on-primary w-14 h-14 flex items-center justify-center rounded-2xl text-headline-sm font-bold mb-6 shadow-lg">1</div>
+                    <h3 class="text-headline-sm font-headline-sm mb-3">Create Profile</h3>
+                    <p class="text-body-md text-[#a0a0b8]">Sign up as a landlord with your phone number — takes 30 seconds.</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-primary-container text-on-primary w-14 h-14 flex items-center justify-center rounded-2xl text-headline-sm font-bold mb-6 shadow-lg">2</div>
+                    <h3 class="text-headline-sm font-headline-sm mb-3">Add Your PG</h3>
+                    <p class="text-body-md text-[#a0a0b8]">Fill in room details, amenities, photos, and rent. Go live instantly.</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-primary-container text-on-primary w-14 h-14 flex items-center justify-center rounded-2xl text-headline-sm font-bold mb-6 shadow-lg">3</div>
+                    <h3 class="text-headline-sm font-headline-sm mb-3">Get Enquiries</h3>
+                    <p class="text-body-md text-[#a0a0b8]">Interested tenants contact you directly — WhatsApp or call.</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-primary-container text-on-primary w-14 h-14 flex items-center justify-center rounded-2xl text-headline-sm font-bold mb-6 shadow-lg">4</div>
+                    <h3 class="text-headline-sm font-headline-sm mb-3">Rent It Out</h3>
+                    <p class="text-body-md text-[#a0a0b8]">Finalize the deal on your terms. Mark as occupied in one click.</p>
+                </div>
+            </div>
+        </section>
 
-<!-- ── LIST YOUR PG FORM ── -->
-<section class="list-section" id="list">
-  <div class="form-wrapper">
-    <div class="eyebrow">Landlord Panel</div>
-    <h2>List Your PG</h2>
-    <p>Free listing. Takes under 5 minutes. No login required to start.</p>
+        <!-- 2. Testimonials Section -->
+        <section class="py-20 mt-10">
+            <div class="text-center mb-12">
+                <p class="text-primary-container text-label-sm font-bold tracking-widest uppercase mb-3">What Landlords Say</p>
+                <h2 class="text-headline-lg font-headline-lg text-on-surface">Trusted by property owners</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                <div class="bg-surface-container-lowest p-8 rounded-2xl ambient-shadow border-l-4 border-primary-container hover-lift">
+                    <p class="text-body-md text-on-surface-variant mb-8 italic">"Listed my PG on a Sunday evening and had 3 serious enquiries by Monday morning. The platform is clean and very easy to use."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="bg-primary-container text-on-primary w-12 h-12 rounded-full flex items-center justify-center font-bold text-label-md">RK</div>
+                        <div>
+                            <h4 class="text-label-md font-bold text-on-surface">Ramesh Kumar</h4>
+                            <p class="text-label-sm text-on-surface-variant">Landlord, Pune</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-surface-container-lowest p-8 rounded-2xl ambient-shadow border-l-4 border-primary-container hover-lift">
+                    <p class="text-body-md text-on-surface-variant mb-8 italic">"No broker involved. I speak directly with tenants, verify them myself, and decide. That level of control is rare on other platforms."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="bg-primary-container text-on-primary w-12 h-12 rounded-full flex items-center justify-center font-bold text-label-md">SP</div>
+                        <div>
+                            <h4 class="text-label-md font-bold text-on-surface">Sunita Patil</h4>
+                            <p class="text-label-sm text-on-surface-variant">Landlord, Bangalore</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-surface-container-lowest p-8 rounded-2xl ambient-shadow border-l-4 border-primary-container hover-lift">
+                    <p class="text-body-md text-on-surface-variant mb-8 italic">"My PG has 12 rooms and I manage all vacancies through StayNest. The search filters bring exactly the right kind of tenants."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="bg-primary-container text-on-primary w-12 h-12 rounded-full flex items-center justify-center font-bold text-label-md">AJ</div>
+                        <div>
+                            <h4 class="text-label-md font-bold text-on-surface">Arjun Joshi</h4>
+                            <p class="text-label-sm text-on-surface-variant">Landlord, Jodhpur</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <form id="pgForm" onsubmit="submitListing(event)">
-      <div class="form-grid">
-        <div class="form-group">
-          <label>PG / Property Name</label>
-          <input type="text" placeholder="e.g. Sunrise Men's PG" required />
+        <!-- 3. THE "LIST YOUR PG" INLINE FORM -->
+        <section id="list" class="py-20 max-w-4xl mx-auto px-margin-mobile md:px-0">
+            <div class="mb-8 text-center">
+                <h2 class="text-headline-lg font-headline-lg text-on-surface mb-2">List Your PG</h2>
+                <p class="text-body-lg text-on-surface-variant">Free listing. Takes under 5 minutes. No login required to start.</p>
+            </div>
+
+            <form onsubmit="submitListing(event)" class="bg-surface-container-lowest p-8 md:p-10 rounded-[32px] ambient-shadow border border-surface-dim flex flex-col gap-6">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-label-md font-bold text-on-surface">PG / Property Name</label>
+                        <input type="text" name="propertyName" placeholder="e.g. Sunrise Men's PG" required class="bg-surface border border-surface-dim rounded-xl p-4 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors">
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-label-md font-bold text-on-surface">Your Name</label>
+                        <input type="text" name="ownerName" placeholder="Landlord name" required class="bg-surface border border-surface-dim rounded-xl p-4 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-label-md font-bold text-on-surface">Phone Number</label>
+                        <input type="tel" name="phoneNumber" placeholder="+91 XXXXX XXXXX" required class="bg-surface border border-surface-dim rounded-xl p-4 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors">
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-label-md font-bold text-on-surface">WhatsApp Number</label>
+                        <!-- FIXED: Changed name to whatsappNumber -->
+                        <input type="tel" name="whatsappNumber" placeholder="Same or different" class="bg-surface border border-surface-dim rounded-xl p-4 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors">
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label class="text-label-md font-bold text-on-surface">Full Address</label>
+                    <input type="text" name="fullAddress" placeholder="House no., Street, Area, City, PIN" required class="bg-surface border border-surface-dim rounded-xl p-4 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-label-md font-bold text-on-surface">City</label>
+                        <input type="text" name="city" placeholder="e.g. Jodhpur" required class="bg-surface border border-surface-dim rounded-xl p-4 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors">
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-label-md font-bold text-on-surface">Monthly Rent (₹)</label>
+                        <input type="number" name="monthlyRent" placeholder="e.g. 12000" required class="bg-surface border border-surface-dim rounded-xl p-4 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-label-md font-bold text-on-surface">Available From</label>
+                        <input type="date" name="availableFrom" required class="bg-surface border border-surface-dim rounded-xl p-4 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors">
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-label-md font-bold text-on-surface">Room Type</label>
+                        <select name="roomType" required class="bg-surface border border-surface-dim rounded-xl p-4 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors appearance-none">
+                            <option value="">Select type</option>
+                            <!-- FIXED: Now perfectly matches the schema enum list -->
+                            <option value="Single Occupancy">Single Occupancy</option>
+                            <option value="Double Sharing">Double Sharing</option>
+                            <option value="Triple Sharing">Triple Sharing</option>
+                            <option value="Entire Flat">Entire Flat</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 gap-6">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-label-md font-bold text-on-surface">PG For</label>
+                        <!-- Notice that "Boys", "Girls", "Co-ed" already matched perfectly! -->
+                        <select name="pgFor" required class="bg-surface border border-surface-dim rounded-xl p-4 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors appearance-none">
+                            <option value="">Select</option>
+                            <option value="Boys">Boys</option>
+                            <option value="Girls">Girls</option>
+                            <option value="Co-ed">Co-ed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-2 mt-2">
+                    <label class="text-label-md font-bold text-on-surface">Upload Photos (Max 5)</label>
+                    <div class="border-2 border-dashed border-surface-dim bg-surface rounded-xl p-8 text-center cursor-pointer hover:border-primary transition-colors" onclick="document.getElementById('photoUpload').click()">
+                        <span class="material-symbols-outlined text-[40px] text-on-surface-variant mb-2">add_a_photo</span>
+                        <p class="text-body-md text-on-surface-variant m-0 upload-text">Click to browse photos (JPG, PNG)</p>
+                        <input type="file" id="photoUpload" multiple accept="image/*" class="hidden" onchange="document.querySelector('.upload-text').textContent = this.files.length + ' photo(s) selected ✓'">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-primary hover:bg-primary-container text-on-primary py-4 rounded-xl font-headline-sm transition-colors shadow-lg mt-4">
+                    Submit Property Details
+                </button>
+            </form>node 
+        </section>
+
+        <!-- 4. Help & Contact Section -->
+        <section class="bg-[#eaf4f4] py-20 -mx-margin-mobile md:-mx-margin-desktop px-margin-mobile md:px-margin-desktop text-center mt-10 rounded-t-[40px]">
+            <h2 class="text-headline-lg font-headline-lg text-on-surface mb-3">We're here to help you</h2>
+            <p class="text-body-lg text-on-surface-variant mb-12">Questions about listing your property or finding a room? Reach out anytime.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
+                <div class="bg-surface-container-lowest p-8 rounded-2xl ambient-shadow hover-lift">
+                    <span class="material-symbols-outlined text-[40px] text-[#d81b60] mb-4">call</span>
+                    <h3 class="text-headline-sm font-bold text-on-surface mb-2">Call Us</h3>
+                    <p class="text-primary-container font-bold">+91 98765 43210</p>
+                </div>
+                <div class="bg-surface-container-lowest p-8 rounded-2xl ambient-shadow hover-lift">
+                    <span class="material-symbols-outlined text-[40px] text-[#ba68c8] mb-4">mail</span>
+                    <h3 class="text-headline-sm font-bold text-on-surface mb-2">Email</h3>
+                    <p class="text-primary-container font-bold">hello@staynest.in</p>
+                </div>
+                <div class="bg-surface-container-lowest p-8 rounded-2xl ambient-shadow hover-lift">
+                    <span class="material-symbols-outlined text-[40px] text-[#4caf50] mb-4">chat</span>
+                    <h3 class="text-headline-sm font-bold text-on-surface mb-2">WhatsApp</h3>
+                    <p class="text-primary-container font-bold">Chat Now</p>
+                </div>
+            </div>
+            
+            <a href="#list" class="inline-block bg-primary-container hover:bg-primary text-on-primary px-10 py-4 rounded-xl font-headline-sm transition-colors shadow-lg">
+                List Your PG Now — It's Free
+            </a>
+        </section>
+
+
+
+    </main>
+
+    <footer class="bg-surface-container-low border-t border-outline-variant mt-auto">
+        <div class="w-full px-margin-desktop py-8 max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-base">
+            <span class="text-headline-sm font-headline-sm font-bold text-on-surface">Stay<span class="text-primary">Nest</span></span>
+            <nav class="flex flex-wrap gap-4 justify-center">
+                <a class="text-on-surface-variant hover:text-primary text-label-sm underline" href="#">Privacy Policy</a>
+                <a class="text-on-surface-variant hover:text-primary text-label-sm underline" href="#">Terms of Service</a>
+                <a class="text-on-surface-variant hover:text-primary text-label-sm underline" href="#">Help Center</a>
+            </nav>
+            <span class="text-on-surface-variant text-label-sm">© 2024 StayNest Hospitality Group. All rights reserved.</span>
         </div>
-        <div class="form-group">
-          <label>Your Name</label>
-          <input type="text" placeholder="Landlord name" required />
-        </div>
-        <div class="form-group">
-          <label>Phone Number</label>
-          <input type="tel" placeholder="+91 XXXXX XXXXX" required />
-        </div>
-        <div class="form-group">
-          <label>WhatsApp Number</label>
-          <input type="tel" placeholder="Same or different" />
-        </div>
-        <div class="form-group full">
-          <label>Full Address</label>
-          <input type="text" placeholder="House no., Street, Area, City, PIN" required />
-        </div>
-        <div class="form-group">
-          <label>City</label>
-          <input type="text" placeholder="e.g. Jodhpur" required />
-        </div>
-        <div class="form-group">
-          <label>Nearby Landmark</label>
-          <input type="text" placeholder="e.g. Near MBM College" />
-        </div>
-        <div class="form-group">
-          <label>Room Type</label>
-          <select required>
-            <option value="">Select type</option>
-            <option>Single Occupancy</option>
-            <option>Double Sharing</option>
-            <option>Triple Sharing</option>
-            <option>Entire Flat</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>PG For</label>
-          <select required>
-            <option value="">Select</option>
-            <option>Boys</option>
-            <option>Girls</option>
-            <option>Co-ed</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Monthly Rent (₹)</label>
-          <input type="number" placeholder="e.g. 6500" required min="500" />
-        </div>
-        <div class="form-group">
-          <label>Security Deposit (₹)</label>
-          <input type="number" placeholder="e.g. 13000" />
-        </div>
-        <div class="form-group">
-          <label>Available From</label>
-          <input type="date" required />
-        </div>
-        <div class="form-group">
-          <label>Rooms Available</label>
-          <input type="number" placeholder="No. of vacancies" min="1" />
-        </div>
-        <div class="form-group full">
-          <label>Amenities Included</label>
-          <div class="amenities-check">
-            <label class="check-item"><input type="checkbox" /> Wi-Fi</label>
-            <label class="check-item"><input type="checkbox" /> AC</label>
-            <label class="check-item"><input type="checkbox" /> Geyser</label>
-            <label class="check-item"><input type="checkbox" /> Meals (2)</label>
-            <label class="check-item"><input type="checkbox" /> Meals (3)</label>
-            <label class="check-item"><input type="checkbox" /> Laundry</label>
-            <label class="check-item"><input type="checkbox" /> TV</label>
-            <label class="check-item"><input type="checkbox" /> Parking</label>
-            <label class="check-item"><input type="checkbox" /> CCTV</label>
-            <label class="check-item"><input type="checkbox" /> Power Backup</label>
-            <label class="check-item"><input type="checkbox" /> Housekeeping</label>
-            <label class="check-item"><input type="checkbox" /> Drinking Water</label>
-          </div>
-        </div>
-        <div class="form-group full">
-          <label>Description / House Rules</label>
-          <textarea rows="4" placeholder="Describe your PG, timings, restrictions, nearby facilities..."></textarea>
-        </div>
-        <div class="form-group full">
-          <label>Upload Photos</label>
-          <div class="upload-area" onclick="triggerUpload()">
-            <span>📷</span>
-            <p>Click to upload room photos (JPG, PNG — max 5 images)</p>
-            <input type="file" id="photoUpload" multiple accept="image/*" style="display:none" />
-          </div>
-        </div>
-      </div>
-      <div class="submit-row">
-        <button type="submit">Publish Listing →</button>
-        <small>By submitting, you agree to our Terms of Service. Listing goes live instantly.</small>
-      </div>
-    </form>
-  </div>
-</section>
+    </footer>
 
-<!-- ── TESTIMONIALS ── -->
-<section class="section" style="background:var(--sand);">
-  <div class="section-header" style="justify-content:center; text-align:center; display:block; margin-bottom:40px;">
-    <div class="eyebrow" style="text-align:center;">What landlords say</div>
-    <h2 style="font-family:'Fraunces',serif; font-size:1.9rem;">Trusted by property owners</h2>
-  </div>
-  <div class="testi-grid">
-    <div class="testi-card">
-      <p>"Listed my PG on a Sunday evening and had 3 serious enquiries by Monday morning. The platform is clean and very easy to use."</p>
-      <div class="testi-author">
-        <div class="avatar">RK</div>
-        <div><h4>Ramesh Kumar</h4><span>Landlord, Pune</span></div>
-      </div>
-    </div>
-    <div class="testi-card">
-      <p>"No broker involved. I speak directly with tenants, verify them myself, and decide. That level of control is rare on other platforms."</p>
-      <div class="testi-author">
-        <div class="avatar">SP</div>
-        <div><h4>Sunita Patil</h4><span>Landlord, Bangalore</span></div>
-      </div>
-    </div>
-    <div class="testi-card">
-      <p>"My PG has 12 rooms and I manage all vacancies through StayNest. The search filters bring exactly the right kind of tenants."</p>
-      <div class="testi-author">
-        <div class="avatar">AJ</div>
-        <div><h4>Arjun Joshi</h4><span>Landlord, Jodhpur</span></div>
-      </div>
-    </div>
-  </div>
-</section>
+    <script>
+        let allListings = []; 
 
-<!-- ── CONTACT ── -->
-<section class="contact-section" id="contact">
-  <div class="eyebrow">Get in touch</div>
-  <h2>We're here to help you</h2>
-  <p>Questions about listing your property or finding a room? Reach out anytime.</p>
-  <div class="contact-cards">
-    <div class="contact-card">
-      <div class="icon">📞</div>
-      <h4>Call Us</h4>
-      <a href="tel:+919876543210">+91 98765 43210</a>
-    </div>
-    <div class="contact-card">
-      <div class="icon">✉️</div>
-      <h4>Email</h4>
-      <a href="mailto:hello@staynest.in">hello@staynest.in</a>
-    </div>
-    <div class="contact-card">
-      <div class="icon">💬</div>
-      <h4>WhatsApp</h4>
-      <a href="https://wa.me/919876543210" target="_blank">Chat Now</a>
-    </div>
-  </div>
-  <a href="#list" class="btn-primary">List Your PG Now — It's Free</a>
-</section>
+        async function fetchListings(searchQuery = '') {
+            try {
+                let url = 'http://localhost:5000/api/listings';
+                if (searchQuery) url += `?search=${searchQuery}`;
+                
+                const response = await fetch(url);
+                allListings = await response.json();
+                renderCards(allListings);
+            } catch (error) {
+                console.error("Error fetching listings:", error);
+                document.getElementById('cardsGrid').innerHTML = `<p class="col-span-full text-center text-error">Could not load listings. Is your server running?</p>`;
+            }
+        }
 
-<!-- ── FOOTER ── -->
-<footer>
-  <div class="footer-logo">Stay<span>Nest</span></div>
-  <div style="margin-bottom:16px;">
-    <a href="#">About</a>
-    <a href="#">Privacy Policy</a>
-    <a href="#">Terms</a>
-    <a href="#contact">Contact</a>
-    <a href="#list">List PG</a>
-  </div>
-  <p>©2025 StayNest. All rights reserved. Connecting landlords with tenants across India.</p>
-</footer>
+        function renderCards(data) {
+            const grid = document.getElementById('cardsGrid');
+            if (!data || data.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center text-on-surface-variant py-12 bg-surface-container-lowest rounded-xl border border-surface-dim">No properties match your search.</div>`;
+                return;
+            }
+            
+            grid.innerHTML = data.map(pg => {
+                // Determine image
+                const imageToDisplay = pg.mediaUrls && pg.mediaUrls.length > 0 
+                    ? pg.mediaUrls[0] 
+                    : 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=500&q=80';
+                
+                // Format price
+                const price = pg.monthlyRent ? pg.monthlyRent.toLocaleString('en-IN') : 0;
 
-<!-- ── CONTACT MODAL ── -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModalBtn()">✕</button>
-    <h3 id="modalTitle">Contact Landlord</h3>
-    <p id="modalSubtitle">Send an enquiry directly — the landlord will contact you shortly.</p>
-    <div class="modal-form">
-      <input type="text" placeholder="Your Name" required />
-      <input type="tel" placeholder="Your Phone Number" required />
-      <input type="text" placeholder="Move-in Date (e.g. 1 July 2025)" />
-      <textarea rows="3" placeholder="Any message or special requirements?"></textarea>
-      <button onclick="sendEnquiry()">Send Enquiry</button>
-    </div>
-  </div>
-</div>
+                // This HTML string now uses Tailwind CSS to match property.html perfectly
+                return `
+                    <a href="property.html?id=${pg._id}" class="group block h-full">
+                        <div class="bg-surface-container-lowest rounded-xl overflow-hidden ambient-shadow hover-lift border border-surface-dim flex flex-col h-full">
+                            
+                            <div class="relative aspect-[4/3] overflow-hidden bg-surface-container-high">
+                                <img src="${imageToDisplay}" alt="${pg.propertyName}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                                <span class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-sm text-on-surface px-3 py-1 rounded-full text-label-sm shadow-sm font-bold border border-surface-dim">${pg.pgFor || 'Any'}</span>
+                            </div>
+                            
+                            <div class="p-5 flex flex-col flex-grow gap-2">
+                                <h3 class="text-headline-sm font-headline-sm text-on-surface truncate" title="${pg.propertyName}">${pg.propertyName || 'Premium Property'}</h3>
+                                
+                                <div class="text-body-md text-on-surface-variant flex items-center gap-1 truncate">
+                                    <span class="material-symbols-outlined text-[18px]">location_on</span>
+                                    ${pg.city || 'Location'} - ${pg.roomType || 'Room'}
+                                </div>
+                                
+                                <div class="flex flex-wrap gap-2 mt-auto pt-3">
+                                    ${(pg.amenities || []).slice(0, 3).map(a => `<span class="bg-surface-container-low text-on-surface-variant px-2 py-1 rounded text-[11px] font-bold tracking-wider uppercase border border-surface-dim">${a}</span>`).join('')}
+                                    ${(pg.amenities && pg.amenities.length > 3) ? `<span class="bg-surface-container-low text-on-surface-variant px-2 py-1 rounded text-[11px] font-bold border border-surface-dim">+${pg.amenities.length - 3}</span>` : ''}
+                                </div>
+                                
+                                <div class="mt-4 pt-4 border-t border-surface-dim flex justify-between items-center">
+                                    <div class="text-on-surface flex items-baseline gap-1">
+                                        <span class="text-headline-sm font-bold">₹${price}</span>
+                                        <span class="text-label-sm text-on-surface-variant">/month</span>
+                                    </div>
+                                </div>
 
-<!-- ── TOAST ── -->
-<div class="toast" id="toast">✅ <span id="toastMsg">Done!</span></div>
+                            </div>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+        }
 
-<script>
-// ── DATA ──
-const listings = [
-  {
-    id:1, name:"Pradhan PG", location:"Sitapura, Jaipur",
-    price:7000, type:"Double Sharing", gender:"Boys",
-    amenities:["Wi-Fi","Meals","AC","Geyser"],
-    status:"available", statusLabel:"Available",
-    img:"https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=500&q=80"
-  },
-  {
-    id:2, name:"Sunshine Girls Hostel", location:"Paota, Jodhpur",
-    price:7200, type:"Single Occupancy", gender:"Girls",
-    amenities:["Wi-Fi","AC","Laundry","CCTV"],
-    status:"available", statusLabel:"Available",
-    img:"https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=500&q=80"
-  },
-  {
-    id:3, name:"Urban Nest PG", location:"Chopasni Housing Board",
-    price:5500, type:"Triple Sharing", gender:"Boys",
-    amenities:["Wi-Fi","TV","Parking","Meals"],
-    status:"limited", statusLabel:"2 Seats Left",
-    img:"https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=500&q=80"
-  },
-  {
-    id:4, name:"Lakshmi Bhawan PG", location:"Shastri Nagar, Jodhpur",
-    price:4800, type:"Double Sharing", gender:"Co-ed",
-    amenities:["Wi-Fi","Geyser","Power Backup"],
-    status:"available", statusLabel:"Available",
-    img:"https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=500&q=80"
-  },
-  {
-    id:5, name:"Elite Stay Hostel", location:"Ratanada, Jodhpur",
-    price:9500, type:"Single Occupancy", gender:"Girls",
-    amenities:["Wi-Fi","AC","Meals","CCTV","Laundry"],
-    status:"available", statusLabel:"Available",
-    img:"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500&q=80"
-  },
-  {
-    id:6, name:"Rajputana Residency", location:"Mandore Road, Jodhpur",
-    price:5000, type:"Triple Sharing", gender:"Boys",
-    amenities:["Wi-Fi","TV","Parking"],
-    status:"full", statusLabel:"Full",
-    img:"https://images.unsplash.com/photo-1513694203232-719a280e022f?w=500&q=80"
-  },
-];
+        // Search and Filter Logic
+        function filterListings() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            const type = document.getElementById('filterType').value;
+            const gender = document.getElementById('filterGender').value;
+            const budget = parseInt(document.getElementById('filterBudget').value) || Infinity;
 
-const genderBadge = { "Boys":"badge-boys", "Girls":"badge-girls", "Co-ed":"badge-available" };
+            const filtered = allListings.filter(pg => {
+                const matchQ = !q || (pg.propertyName && pg.propertyName.toLowerCase().includes(q)) || (pg.city && pg.city.toLowerCase().includes(q));
+                const matchT = !type || pg.roomType === type;
+                const matchG = !gender || pg.pgFor === gender;
+                const matchB = (pg.monthlyRent || 0) <= budget;
+                return matchQ && matchT && matchG && matchB;
+            });
+            renderCards(filtered);
+        }
 
-function renderCards(data) {
-  const grid = document.getElementById('cardsGrid');
-  if (!data.length) {
-    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:48px 0;">No PGs found matching your filters. <a href="#" style="color:var(--clay);" onclick="resetFilter();return false;">Clear filters</a></div>`;
-    return;
-  }
-  grid.innerHTML = data.map(pg => `
-    <div class="pg-card">
-      <div class="card-img">
-        <img src="${pg.img}" alt="${pg.name}" loading="lazy" />
-        <span class="badge badge-${pg.status}">${pg.statusLabel}</span>
-        <span class="badge ${genderBadge[pg.gender]}" style="top:44px;">${pg.gender}</span>
-        <button class="wishlist-btn" onclick="toggleWish(this)" title="Save">🤍</button>
-      </div>
-      <div class="card-body">
-        <h3>${pg.name}</h3>
-        <div class="card-location">📍 ${pg.location}</div>
-        <div class="card-amenities">
-          ${pg.amenities.map(a=>`<span class="amenity-tag">${a}</span>`).join('')}
-        </div>
-        <div class="card-footer">
-          <div class="price">₹${pg.price.toLocaleString('en-IN')}<span>/month</span></div>
-          <button class="btn-contact" onclick="openModal('${pg.name}', '${pg.location}')">Enquire</button>
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
+        function resetFilter() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterType').value = '';
+            document.getElementById('filterGender').value = '';
+            document.getElementById('filterBudget').value = '';
+            renderCards(allListings);
+        }
 
-renderCards(listings);
+        // AUTHENTICATION LOGIC
+        function checkUserStatus() {
+            const userMenu = document.getElementById('userMenu');
+            const savedUser = localStorage.getItem('staynestUser'); 
 
-function filterListings() {
-  const q = document.getElementById('searchInput').value.toLowerCase();
-  const type = document.getElementById('filterType').value;
-  const gender = document.getElementById('filterGender').value;
-  const budget = parseInt(document.getElementById('filterBudget').value) || Infinity;
+            if (savedUser) {
+                const user = JSON.parse(savedUser);
+                let menuHTML = `<span class="font-bold text-on-surface mr-4">Welcome, ${user.name}!</span>`;
+                
+                if (user.role === 'landlord' || user.role === 'admin') {
+                   menuHTML += `<a href="#list" class="text-primary hover:bg-primary-fixed bg-surface-container-highest px-4 py-2 rounded-lg text-label-md font-bold transition-colors">+ Add Listing</a>`;
+                }
 
-  const filtered = listings.filter(pg => {
-    const matchQ = !q || pg.name.toLowerCase().includes(q) || pg.location.toLowerCase().includes(q);
-    const matchT = !type || pg.type === type;
-    const matchG = !gender || pg.gender === gender;
-    const matchB = pg.price <= budget;
-    return matchQ && matchT && matchG && matchB;
-  });
+                menuHTML += `<button onclick="logout()" class="bg-surface-container-high hover:bg-surface-dim text-on-surface px-4 py-2 rounded-lg text-label-md ml-2 transition-colors">Logout</button>`;
+                userMenu.innerHTML = menuHTML;
+            } else {
+                userMenu.innerHTML = `
+                    <a href="login.html" class="text-on-surface font-bold text-label-md hover:text-primary transition-colors">Log In</a>
+                    <a href="login.html" class="bg-primary text-on-primary px-5 py-2 rounded-lg font-bold text-label-md ml-4 hover:bg-primary-container transition-colors shadow-sm">Sign Up</a>
+                `;
+            }
+        }
 
-  renderCards(filtered);
-  document.getElementById('listings').scrollIntoView({ behavior:'smooth' });
-}
+        function logout() {
+            localStorage.removeItem('staynestToken'); 
+            localStorage.removeItem('staynestUser');
+            window.location.reload(); 
+        }
+// --- REAL FORM SUBMISSION ---
+        async function submitListing(event) {
+            event.preventDefault(); 
+            
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.textContent;
+            submitBtn.textContent = "Uploading Photos... Please wait ⏳";
+            submitBtn.disabled = true;
 
-function resetFilter() {
-  document.getElementById('searchInput').value = '';
-  document.getElementById('filterType').value = '';
-  document.getElementById('filterGender').value = '';
-  document.getElementById('filterBudget').value = '';
-  renderCards(listings);
-}
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            const fileInput = document.getElementById('photoUpload');
+            for (let i = 0; i < fileInput.files.length; i++) {
+                formData.append('photos', fileInput.files[i]); 
+            }
 
-// ── MODAL ──
-function openModal(name, location) {
-  document.getElementById('modalTitle').textContent = 'Enquire: ' + name;
-  document.getElementById('modalSubtitle').textContent = '📍 ' + location + ' — Send your request directly.';
-  document.getElementById('modalOverlay').classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-function closeModalBtn() {
-  document.getElementById('modalOverlay').classList.remove('active');
-  document.body.style.overflow = '';
-}
-function closeModal(e) {
-  if (e.target === document.getElementById('modalOverlay')) closeModalBtn();
-}
-function sendEnquiry() {
-  closeModalBtn();
-  showToast('Enquiry sent! The landlord will contact you soon.');
-}
+            try {
+                const response = await fetch('http://localhost:5000/api/listings', {
+                    method: 'POST',
+                    body: formData 
+                });
 
-// ── FORM SUBMIT ──
-function submitListing(e) {
-  e.preventDefault();
-  showToast('🎉 Your PG is now live! Tenants can find it right away.');
-  e.target.reset();
-}
+                const result = await response.json();
 
-// ── WISHLIST ──
-function toggleWish(btn) {
-  btn.textContent = btn.textContent === '🤍' ? '❤️' : '🤍';
-  if (btn.textContent === '❤️') showToast('Added to your saved list!');
-}
-
-// ── UPLOAD ──
-function triggerUpload() {
-  document.getElementById('photoUpload').click();
-}
-document.getElementById('photoUpload').onchange = function() {
-  if (this.files.length) {
-    document.querySelector('.upload-area p').textContent = `${this.files.length} photo(s) selected ✓`;
-  }
-};
-
-// ── TOAST ──
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  document.getElementById('toastMsg').textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3500);
-}
-
-// ── SMOOTH SCROLL for anchors ──
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    const target = document.querySelector(a.getAttribute('href'));
-    if (target) { e.preventDefault(); target.scrollIntoView({ behavior:'smooth' }); }
-  });
-});
-</script>
+                if (response.ok) {
+                    // Success!
+                    alert("Listing submitted successfully! 🚀"); 
+                    form.reset(); 
+                    document.querySelector('.upload-text').textContent = "Click to browse photos (JPG, PNG)";
+                    fetchListings(); // Refresh the grid to show the new listing
+                } else {
+                    alert("Error: " + result.message);
+                }
+            } catch (error) {
+                console.error("Network Error:", error);
+                alert("Failed to connect to the server.");
+            } finally {
+                submitBtn.textContent = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        }
+        // Initialize Page
+        checkUserStatus();
+        fetchListings(); 
+    </script>
 </body>
 </html>
