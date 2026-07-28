@@ -421,7 +421,7 @@
 
         async function fetchListings(searchQuery = '') {
             try {
-                let url = 'http://localhost:5000/api/listings';
+                let url = 'https://staynest-backend-42ek.onrender.com/api/listings';
                 if (searchQuery) url += `?search=${searchQuery}`;
                 
                 const response = await fetch(url);
