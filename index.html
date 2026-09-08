@@ -439,6 +439,12 @@
             document.getElementById('filterBudget').value = '';
             renderCards(allListings);
         }
+        document.getElementById('searchInput').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevents the form from accidentally reloading the page
+        filterListings();       // Triggers your exact search function
+    }
+});
 
         // AUTHENTICATION LOGIC
         function checkUserStatus() {
