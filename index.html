@@ -75,20 +75,24 @@
 <body class="font-body-md text-on-surface min-h-screen flex flex-col">
 
     <header class="bg-surface shadow-sm sticky top-0 z-50">
-        <div class="flex justify-between items-center w-full px-margin-desktop py-4 max-w-container-max mx-auto">
-            <div class="flex items-center gap-2 cursor-pointer">
-                <span class="text-headline-md font-headline-md font-extrabold text-on-surface">Stay<span class="text-primary">Nest</span></span>
-            </div>
+    <div class="flex justify-between items-center w-full px-margin-desktop py-4 max-w-container-max mx-auto">
+        
+        <!-- 1. Logo updated to a clickable link -->
+        <a href="index.html" class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
+            <span class="text-headline-md font-headline-md font-extrabold text-on-surface">Stay<span class="text-primary">Nest</span></span>
+        </a>
+        
+        <nav class="hidden md:flex items-center gap-gutter">
+            <a class="text-primary border-b-2 border-primary pb-1 text-label-md opacity-80" href="index.html">Browse PG's</a>
             
-            <nav class="hidden md:flex items-center gap-gutter">
-                <a class="text-primary border-b-2 border-primary pb-1 text-label-md opacity-80" href="index.html">Browse PG's</a>
-                <a class="text-on-surface-variant hover:text-primary transition-colors text-label-md" href="#">Contact</a>
-            </nav>
-            
-            <div id="userMenu" class="hidden md:flex items-center gap-gutter">
-                </div>
+            <!-- 2. Contact link updated to target the section -->
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-md" href="index.html#contact">Contact</a>
+        </nav>
+        
+        <div id="userMenu" class="hidden md:flex items-center gap-gutter">
         </div>
-    </header>
+    </div>
+</header>
 
     <main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8">
         
