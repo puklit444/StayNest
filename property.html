@@ -104,9 +104,7 @@
 <section class="relative w-full mb-section-gap rounded-xl overflow-hidden shadow-sm h-[400px] md:h-[500px] flex gap-2">
 <!-- Left Large Image -->
 <div class="w-full md:w-1/2 h-full rounded-l-xl overflow-hidden cursor-pointer group">
-<img id="mainImage" alt="Main property view" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=500&q=80"/>
-</div>
-<!-- Right 2x2 Grid (Desktop Only) -->
+<img id="mainImage" alt="Main property view" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=500&q=80" onclick="openModal(this)" style="cursor: zoom-in;"/><!-- Right 2x2 Grid (Desktop Only) -->
 <div class="hidden md:flex w-1/2 h-full flex-col gap-2">
 <div class="flex h-1/2 gap-2">
 <div class="w-1/2 h-full overflow-hidden cursor-pointer group">
@@ -256,8 +254,22 @@
     }
     
     loadRealPropertyData();
-</script>
+    // Opens the modal and sets the image source
+function openModal(imageElement) {
+    document.getElementById('zoomedImage').src = imageElement.src;
+    document.getElementById('imageModal').style.display = 'flex';
+}
 
+// Closes the modal
+function closeModal() {
+    document.getElementById('imageModal').style.display = 'none';
+}
+</script>
+<!-- Full-Screen Image Zoom Modal -->
+<div id="imageModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; cursor: zoom-out;" onclick="closeModal()">
+    <span style="position: absolute; top: 20px; right: 40px; color: white; font-size: 45px; font-weight: bold; cursor: pointer;">&times;</span>
+    <img id="zoomedImage" style="max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 8px;">
+</div>
 </body>
 </html>
 </body></html>
