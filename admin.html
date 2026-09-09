@@ -108,13 +108,22 @@
           const card = document.createElement('div');
           card.className = 'card';
           card.innerHTML = `
-            <img src="${mainImage}" alt="Property Image">
-            <h3>${pg.propertyName}</h3>
-            <p>📍 ${pg.city}</p>
-            <p>💰 ₹${pg.monthlyRent.toLocaleString('en-IN')}/month</p>
-            <p>👤 Landlord: ${pg.ownerName}</p>
-            <button class="btn-approve" onclick="approveListing('${pg._id}')">✅ Approve & Publish</button>
-          `;
+  <img src="${mainImage}" alt="Property Image" style="width:100%; border-radius:8px; object-fit:cover; height:200px;">
+  <h3>${pg.propertyName}</h3>
+  <p>📍 ${pg.city}</p>
+  <p>💰 ₹${pg.monthlyRent.toLocaleString('en-IN')}/month</p>
+  <p>👤 Landlord: ${pg.ownerName}</p>
+  
+  <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
+      <button onclick="approveListing('${pg._id}')" style="background:#22c55e; color:white; padding:8px; border-radius:6px; cursor:pointer; border:none;">✅ Approve & Publish</button>
+      
+      <!-- Opens the property page in a new tab to review -->
+      <button onclick="window.open('property.html?id=${pg._id}', '_blank')" style="background:#3b82f6; color:white; padding:8px; border-radius:6px; cursor:pointer; border:none;">🔍 Review Details</button>
+      
+      <!-- Triggers the decline function -->
+      <button onclick="declineListing('${pg._id}')" style="background:#ef4444; color:white; padding:8px; border-radius:6px; cursor:pointer; border:none;">❌ Decline & Delete</button>
+  </div>
+`;
           grid.appendChild(card);
         });
       } catch (error) {
@@ -141,6 +150,25 @@
         console.error("Error approving:", error);
       }
     }
+    // --- 4. DECLINE LISTING ---
+async function declineListing(id) {
+  if (!confirm("Are you sure you want to completely reject and delete this listing?")) return;
+
+  try {
+    const response = await fetch(`https://staynest-backend-42ek.onrender.com/api/admin/listings/${id}`, {
+      method: 'DELETE' // Tells your backend to delete this record
+    });
+
+    if (response.ok) {
+      alert("Listing declined and removed.");
+      fetchPending(); // Refresh the grid
+    } else {
+      alert("Failed to decline listing. Check backend route.");
+    }
+  } catch (error) {
+    console.error("Error declining:", error);
+  }
+}
 
     // Run both fetches when the page loads
     fetchLeads();
